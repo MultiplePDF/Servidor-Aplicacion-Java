@@ -1,34 +1,46 @@
 package com.example.soap;
 
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.Path;
+
+import javax.jws.WebService;
+import javax.jws.WebMethod;
+
+@WebService
 public class Operations {
+    @WebMethod
     String signIn(String email, String pass){
         String token = "token";
         return token;
     }
+    @WebMethod
     String signUp(String name, String lastName, String email, String pass){
         String token = "token";
         return token;
     }
+    @WebMethod
     boolean signOut(){
         // clientes deben borrar el token de su storage
         return true;
     }
+    @WebMethod
     boolean forgotPassword(String email){
         return true;
     }
-
+    @WebMethod
     boolean changePassword(String token, String email, String oldPass, String newPass){
         return true;
     }
-
+    @WebMethod
     Object loadFilesBase64(String token, Object archivosPaginas){ // JSON en forma de lote (ver clase)
         return null; //retorna un json en forma lote de PDFs
     }
-
+    @WebMethod
     Object getPastTransactions(String token){
         return null; //retorna un json en forma de lote de PDFs
     }
-
+    @WebMethod
     Object getPastTransactionByID(String token, String idTransaction){
         return null; //retorna un json en forma de lote de PDFs
     }
