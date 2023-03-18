@@ -44,11 +44,16 @@ public class Operations {
     Object getPastTransactionByID(String token, String idTransaction){
         return null; //retorna un json en forma de lote de PDFs
     }
+    Object getFile(String token, String idLote, String idArchivo){
+        return null; //retorna un json en forma de lote de PDFs
+    }
+    Object getFiles(String token, String idLote){
+        return null; //retorna un json en forma de lote de PDFs
+    }
 
     // todo: preguntar y discutir en clase
-    // falta los de descargar archivo?
     // como se descarga el archivo si lo que devuelven es la ruta en el servidor de archivos?
-    // No tiene sentido devolver el archivo pdf serializado para que lo deserailicen los clientes
+    // No tiene sentido devolver el archivo pdf serializado para que lo deserializar los clientes
     // porque entonces para qué es el servidor de archivos?
     // O si?
 }
