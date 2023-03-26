@@ -1,53 +1,49 @@
 package com.example.soap;
 
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.ws.rs.HttpMethod;
-import jakarta.ws.rs.Path;
-
-import javax.jws.WebService;
-import javax.jws.WebMethod;
+import jakarta.jws.WebMethod;
+import jakarta.jws.WebService;
 
 @WebService
 public class Operations {
-    @WebMethod
-    String signIn(String email, String pass){
+    @WebMethod(operationName = "Iniciar sesion")
+    public String signIn(String email, String pass){
         String token = "token";
         return token;
     }
     @WebMethod
-    String signUp(String name, String lastName, String email, String pass){
+    public String signUp(String name, String lastName, String email, String pass){
         String token = "token";
         return token;
     }
     @WebMethod
-    boolean signOut(){
+    public boolean signOut(){
         // clientes deben borrar el token de su storage
         return true;
     }
     @WebMethod
-    boolean forgotPassword(String email){
+    public boolean forgotPassword(String email){
         return true;
     }
     @WebMethod
-    boolean changePassword(String token, String email, String oldPass, String newPass){
+    public boolean changePassword(String token, String email, String oldPass, String newPass){
         return true;
     }
     @WebMethod
-    Object loadFilesBase64(String token, Object archivosPaginas){ // JSON en forma de lote (ver clase)
+    public Object loadFilesBase64(String token, Object archivosPaginas){ // JSON en forma de lote (ver clase)
         return null; //retorna un json en forma lote de PDFs
     }
     @WebMethod
-    Object getPastTransactions(String token){
+    public Object getPastTransactions(String token){
         return null; //retorna un json en forma de lote de PDFs
     }
     @WebMethod
-    Object getPastTransactionByID(String token, String idTransaction){
+    public Object getPastTransactionByID(String token, String idTransaction){
         return null; //retorna un json en forma de lote de PDFs
     }
-    Object getFile(String token, String idLote, String idArchivo){
+    public Object getFile(String token, String idLote, String idArchivo){
         return null; //retorna un json en forma de lote de PDFs
     }
-    Object getFiles(String token, String idLote){
+    public Object getFiles(String token, String idLote){
         return null; //retorna un json en forma de lote de PDFs
     }
 
