@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bindings version="2.1" xmlns="http://java.sun.com/xml/ns/jaxb">
+  <!--
+
+Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.3.2 
+Visite <a href="https://javaee.github.io/jaxb-v2/">https://javaee.github.io/jaxb-v2/</a> 
+Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+Generado el: 2023.03.26 a las 08:40:42 PM COT 
+
+  -->
+  <bindings scd="x-schema::tns" xmlns:tns="http://java.bucaramanga.upb.edu.co/multiplepdf.xsd">
+    <schemaBindings map="false">
+      <package name="co.edu.upb.bucaramanga.java.multiplepdf"/>
+    </schemaBindings>
+    <bindings scd="tns:getUserResponse">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.GetUserResponse"/>
+    </bindings>
+    <bindings scd="~tns:UserResponse">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.UserResponse"/>
+    </bindings>
+    <bindings scd="tns:getUserRequest">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.GetUserRequest"/>
+    </bindings>
+    <bindings scd="~tns:UserType">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.UserType"/>
+    </bindings>
+    <bindings scd="tns:getFileResponse">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.GetFileResponse"/>
+    </bindings>
+    <bindings scd="~tns:FileResponse">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.FileResponse"/>
+    </bindings>
+    <bindings scd="tns:getFileRequest">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.GetFileRequest"/>
+    </bindings>
+    <bindings scd="~tns:FileType">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.FileType"/>
+    </bindings>
+    <bindings scd="tns:getBatchResponse">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.GetBatchResponse"/>
+    </bindings>
+    <bindings scd="~tns:BatchResponse">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.BatchResponse"/>
+    </bindings>
+    <bindings scd="tns:getBatchRequest">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.GetBatchRequest"/>
+    </bindings>
+    <bindings scd="~tns:BatchType">
+      <class ref="co.edu.upb.bucaramanga.java.multiplepdf.BatchType"/>
+    </bindings>
+  </bindings>
+</bindings>
+
