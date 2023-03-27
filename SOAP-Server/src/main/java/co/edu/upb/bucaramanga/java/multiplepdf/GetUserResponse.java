@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="Batch" type="{http://java.bucaramanga.upb.edu.co/multiplepdf.xsd}BatchResponse"/&gt;
+ *         &lt;element name="User" type="{http://java.bucaramanga.upb.edu.co/multiplepdf.xsd}UserResponse"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -36,36 +36,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "batch"
+    "user"
 })
-@XmlRootElement(name = "getBatchResponse")
-public class GetBatchResponse {
+@XmlRootElement(name = "getUserResponse")
+public class GetUserResponse {
 
-    @XmlElement(name = "Batch", required = true)
-    protected BatchResponse batch;
+    @XmlElement(name = "User", required = true)
+    protected UserResponse user;
 
     /**
-     * Obtiene el valor de la propiedad batch.
+     * Obtiene el valor de la propiedad user.
      * 
      * @return
      *     possible object is
-     *     {@link BatchResponse }
+     *     {@link UserResponse }
      *     
      */
-    public BatchResponse getBatch() {
-        return batch;
+    public UserResponse getUser() {
+        return user;
     }
 
     /**
-     * Define el valor de la propiedad batch.
+     * Define el valor de la propiedad user.
      * 
      * @param value
      *     allowed object is
-     *     {@link BatchResponse }
+     *     {@link UserResponse }
      *     
      */
-    public void setBatch(BatchResponse value) {
-        this.batch = value;
+    public void setUser(UserResponse value) {
+        this.user = value;
     }
 
 }

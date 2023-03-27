@@ -11,21 +11,20 @@ package co.edu.upb.bucaramanga.java.multiplepdf;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para anonymous complex type.
+ * <p>Clase Java para FileResponse complex type.
  * 
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
- * &lt;complexType&gt;
+ * &lt;complexType name="FileResponse"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="Batch" type="{http://java.bucaramanga.upb.edu.co/multiplepdf.xsd}BatchResponse"/&gt;
+ *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -35,37 +34,36 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "batch"
+@XmlType(name = "FileResponse", propOrder = {
+    "status"
 })
-@XmlRootElement(name = "getBatchResponse")
-public class GetBatchResponse {
+public class FileResponse {
 
-    @XmlElement(name = "Batch", required = true)
-    protected BatchResponse batch;
+    @XmlElement(required = true)
+    protected String status;
 
     /**
-     * Obtiene el valor de la propiedad batch.
+     * Obtiene el valor de la propiedad status.
      * 
      * @return
      *     possible object is
-     *     {@link BatchResponse }
+     *     {@link String }
      *     
      */
-    public BatchResponse getBatch() {
-        return batch;
+    public String getStatus() {
+        return status;
     }
 
     /**
-     * Define el valor de la propiedad batch.
+     * Define el valor de la propiedad status.
      * 
      * @param value
      *     allowed object is
-     *     {@link BatchResponse }
+     *     {@link String }
      *     
      */
-    public void setBatch(BatchResponse value) {
-        this.batch = value;
+    public void setStatus(String value) {
+        this.status = value;
     }
 
 }

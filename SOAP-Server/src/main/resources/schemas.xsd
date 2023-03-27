@@ -4,30 +4,85 @@
            targetNamespace="http://java.bucaramanga.upb.edu.co/multiplepdf.xsd"
            elementFormDefault="qualified">
 
-<!--TO DOOOOOO   -->
-<!--    <xsd:complexType name="UserType">-->
-<!--        <xsd:sequence>-->
-<!--            <xsd:element type="xsd:string" name="Name"/>-->
-<!--            <xsd:element type="xsd:string" name="LastName"/>-->
-<!--            <xsd:element type="xsd:string" name="Email"/>-->
-<!--            <xsd:element type="xsd:string" name="Password"/>-->
-<!--        </xsd:sequence>-->
-<!--    </xsd:complexType>-->
-<!--    -->
+    <!--        USER       -->
 
-<!--    <xsd:complexType name="FileType">-->
-<!--        <xsd:sequence>-->
-<!--            <xsd:element type="xsd:string" name="Filename"/>-->
-<!--            <xsd:element type="xsd:string" name="Size"/>-->
-<!--            <xsd:element type="xsd:string" name="Path">-->
-<!--                <xsd:annotation>-->
-<!--                    <xsd:documentation>El servidor de archivos manda string de tamaño</xsd:documentation>-->
-<!--                </xsd:annotation>-->
-<!--            </xsd:element>-->
-<!--        </xsd:sequence>-->
-<!--    </xsd:complexType>-->
+    <xsd:element name="getUserResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element type="tns:UserResponse" name="User" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
 
-<!--    BATCH         -->
+    <xsd:element name="getUserRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element type="tns:UserType" name="User" >
+                    <xsd:annotation>
+                        <xsd:documentation>Lote True si ya expiró, False si no</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="UserResponse">
+        <xsd:sequence>
+            <xsd:element name="status" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="UserType">
+        <xsd:sequence>
+            <xsd:element type="xsd:string" name="Name"/>
+            <xsd:element type="xsd:string" name="LastName"/>
+            <xsd:element type="xsd:string" name="Email"/>
+            <xsd:element type="xsd:string" name="Password"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <!--        FILE       -->
+
+    <xsd:element name="getFileResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element type="tns:FileResponse" name="File" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="getFileRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element type="tns:FileType" name="File" >
+                    <xsd:annotation>
+                        <xsd:documentation>Lote True si ya expiró, False si no</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="FileResponse">
+        <xsd:sequence>
+            <xsd:element name="status" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="FileType">
+        <xsd:sequence>
+            <xsd:element type="xsd:string" name="Filename"/>
+            <xsd:element type="xsd:string" name="Size"/>
+            <xsd:element type="xsd:string" name="Path">
+                <xsd:annotation>
+                    <xsd:documentation>El servidor de archivos manda string de tamaño</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!--        BATCH       -->
 
     <xsd:element name="getBatchResponse">
         <xsd:complexType>

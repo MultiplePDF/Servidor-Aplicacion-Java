@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="Batch" type="{http://java.bucaramanga.upb.edu.co/multiplepdf.xsd}BatchResponse"/&gt;
+ *         &lt;element name="File" type="{http://java.bucaramanga.upb.edu.co/multiplepdf.xsd}FileType"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -36,36 +36,36 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "batch"
+    "file"
 })
-@XmlRootElement(name = "getBatchResponse")
-public class GetBatchResponse {
+@XmlRootElement(name = "getFileRequest")
+public class GetFileRequest {
 
-    @XmlElement(name = "Batch", required = true)
-    protected BatchResponse batch;
+    @XmlElement(name = "File", required = true)
+    protected FileType file;
 
     /**
-     * Obtiene el valor de la propiedad batch.
+     * Obtiene el valor de la propiedad file.
      * 
      * @return
      *     possible object is
-     *     {@link BatchResponse }
+     *     {@link FileType }
      *     
      */
-    public BatchResponse getBatch() {
-        return batch;
+    public FileType getFile() {
+        return file;
     }
 
     /**
-     * Define el valor de la propiedad batch.
+     * Define el valor de la propiedad file.
      * 
      * @param value
      *     allowed object is
-     *     {@link BatchResponse }
+     *     {@link FileType }
      *     
      */
-    public void setBatch(BatchResponse value) {
-        this.batch = value;
+    public void setFile(FileType value) {
+        this.file = value;
     }
 
 }

@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.3.2 
 // Visite <a href="https://javaee.github.io/jaxb-v2/">https://javaee.github.io/jaxb-v2/</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2023.03.26 a las 07:03:35 PM COT 
+// Generado el: 2023.03.26 a las 07:10:34 PM COT 
 //
 
 
@@ -34,6 +34,70 @@ public class ObjectFactory {
      * 
      */
     public ObjectFactory() {
+    }
+
+    /**
+     * Create an instance of {@link GetUserResponse }
+     * 
+     */
+    public GetUserResponse createGetUserResponse() {
+        return new GetUserResponse();
+    }
+
+    /**
+     * Create an instance of {@link UserResponse }
+     * 
+     */
+    public UserResponse createUserResponse() {
+        return new UserResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetUserRequest }
+     * 
+     */
+    public GetUserRequest createGetUserRequest() {
+        return new GetUserRequest();
+    }
+
+    /**
+     * Create an instance of {@link UserType }
+     * 
+     */
+    public UserType createUserType() {
+        return new UserType();
+    }
+
+    /**
+     * Create an instance of {@link GetFileResponse }
+     * 
+     */
+    public GetFileResponse createGetFileResponse() {
+        return new GetFileResponse();
+    }
+
+    /**
+     * Create an instance of {@link FileResponse }
+     * 
+     */
+    public FileResponse createFileResponse() {
+        return new FileResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetFileRequest }
+     * 
+     */
+    public GetFileRequest createGetFileRequest() {
+        return new GetFileRequest();
+    }
+
+    /**
+     * Create an instance of {@link FileType }
+     * 
+     */
+    public FileType createFileType() {
+        return new FileType();
     }
 
     /**
