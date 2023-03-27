@@ -4,6 +4,36 @@
            targetNamespace="http://java.bucaramanga.upb.edu.co/multiplepdf.xsd"
            elementFormDefault="qualified">
 
+    <!--  PRUEBAS  -->
+    <xsd:element name="getPruebaResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element type="tns:PruebaResponse" name="Prueba" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="getPruebaRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element type="tns:Prueba" name="Prueba" >
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType name="PruebaResponse">
+        <xsd:sequence>
+            <xsd:element name="nombreEntrada" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Prueba">
+        <xsd:sequence>
+            <xsd:element type="xsd:string" name="Name"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
     <!--        USER       -->
 
     <xsd:element name="getUserResponse">

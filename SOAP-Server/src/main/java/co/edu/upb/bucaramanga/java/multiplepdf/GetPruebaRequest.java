@@ -11,20 +11,21 @@ package co.edu.upb.bucaramanga.java.multiplepdf;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para UserResponse complex type.
+ * <p>Clase Java para anonymous complex type.
  * 
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
- * &lt;complexType name="UserResponse"&gt;
+ * &lt;complexType&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="Prueba" type="{http://java.bucaramanga.upb.edu.co/multiplepdf.xsd}Prueba"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -34,36 +35,37 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "UserResponse", propOrder = {
-    "status"
+@XmlType(name = "", propOrder = {
+    "prueba"
 })
-public class UserResponse {
+@XmlRootElement(name = "getPruebaRequest")
+public class GetPruebaRequest {
 
-    @XmlElement(required = true)
-    protected String status;
+    @XmlElement(name = "Prueba", required = true)
+    protected Prueba prueba;
 
     /**
-     * Obtiene el valor de la propiedad status.
+     * Obtiene el valor de la propiedad prueba.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link Prueba }
      *     
      */
-    public String getStatus() {
-        return status;
+    public Prueba getPrueba() {
+        return prueba;
     }
 
     /**
-     * Define el valor de la propiedad status.
+     * Define el valor de la propiedad prueba.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link Prueba }
      *     
      */
-    public void setStatus(String value) {
-        this.status = value;
+    public void setPrueba(Prueba value) {
+        this.prueba = value;
     }
 
 }

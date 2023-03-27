@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.3.2 
 // Visite <a href="https://javaee.github.io/jaxb-v2/">https://javaee.github.io/jaxb-v2/</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2023.03.26 a las 08:40:42 PM COT 
+// Generado el: 2023.03.26 a las 09:14:11 PM COT 
 //
 
 
@@ -34,6 +34,38 @@ public class ObjectFactory {
      * 
      */
     public ObjectFactory() {
+    }
+
+    /**
+     * Create an instance of {@link GetPruebaResponse }
+     * 
+     */
+    public GetPruebaResponse createGetPruebaResponse() {
+        return new GetPruebaResponse();
+    }
+
+    /**
+     * Create an instance of {@link PruebaResponse }
+     * 
+     */
+    public PruebaResponse createPruebaResponse() {
+        return new PruebaResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetPruebaRequest }
+     * 
+     */
+    public GetPruebaRequest createGetPruebaRequest() {
+        return new GetPruebaRequest();
+    }
+
+    /**
+     * Create an instance of {@link Prueba }
+     * 
+     */
+    public Prueba createPrueba() {
+        return new Prueba();
     }
 
     /**

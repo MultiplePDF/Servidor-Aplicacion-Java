@@ -15,16 +15,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para UserResponse complex type.
+ * <p>Clase Java para PruebaResponse complex type.
  * 
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
- * &lt;complexType name="UserResponse"&gt;
+ * &lt;complexType name="PruebaResponse"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="nombreEntrada" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -34,36 +34,36 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "UserResponse", propOrder = {
-    "status"
+@XmlType(name = "PruebaResponse", propOrder = {
+    "nombreEntrada"
 })
-public class UserResponse {
+public class PruebaResponse {
 
     @XmlElement(required = true)
-    protected String status;
+    protected String nombreEntrada;
 
     /**
-     * Obtiene el valor de la propiedad status.
+     * Obtiene el valor de la propiedad nombreEntrada.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getStatus() {
-        return status;
+    public String getNombreEntrada() {
+        return nombreEntrada;
     }
 
     /**
-     * Define el valor de la propiedad status.
+     * Define el valor de la propiedad nombreEntrada.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setStatus(String value) {
-        this.status = value;
+    public void setNombreEntrada(String value) {
+        this.nombreEntrada = value;
     }
 
 }
