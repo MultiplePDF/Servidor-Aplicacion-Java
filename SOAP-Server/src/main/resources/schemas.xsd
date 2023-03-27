@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://java.bucaramanga.upb.edu.co/multiplepdf.xsd"
+           targetNamespace="http://java.bucaramanga.upb.edu.co/multiplepdf.xsd"
+           elementFormDefault="qualified">
+
+<!--TO DOOOOOO   -->
+<!--    <xsd:complexType name="UserType">-->
+<!--        <xsd:sequence>-->
+<!--            <xsd:element type="xsd:string" name="Name"/>-->
+<!--            <xsd:element type="xsd:string" name="LastName"/>-->
+<!--            <xsd:element type="xsd:string" name="Email"/>-->
+<!--            <xsd:element type="xsd:string" name="Password"/>-->
+<!--        </xsd:sequence>-->
+<!--    </xsd:complexType>-->
+<!--    -->
+
+<!--    <xsd:complexType name="FileType">-->
+<!--        <xsd:sequence>-->
+<!--            <xsd:element type="xsd:string" name="Filename"/>-->
+<!--            <xsd:element type="xsd:string" name="Size"/>-->
+<!--            <xsd:element type="xsd:string" name="Path">-->
+<!--                <xsd:annotation>-->
+<!--                    <xsd:documentation>El servidor de archivos manda string de tamaño</xsd:documentation>-->
+<!--                </xsd:annotation>-->
+<!--            </xsd:element>-->
+<!--        </xsd:sequence>-->
+<!--    </xsd:complexType>-->
+
+<!--    BATCH         -->
+
+    <xsd:element name="getBatchResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element type="tns:BatchResponse" name="Batch" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="getBatchRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element type="tns:BatchType" name="Batch" >
+                    <xsd:annotation>
+                        <xsd:documentation>Lote True si ya expiró, False si no</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+   <xsd:complexType name="BatchResponse">
+       <xsd:sequence>
+           <xsd:element name="status" type="xsd:string"/>
+       </xsd:sequence>
+   </xsd:complexType>
+
+    <xsd:complexType name="BatchType">
+        <xsd:sequence>
+            <xsd:element type="xsd:string" name="IdBatch"/>
+            <xsd:element type="xsd:string" name="IdUser"/>
+            <xsd:element type="xsd:string" name="DateCreated"/>
+            <xsd:element type="xsd:string" name="FileQuantity"/>
+            <xsd:element type="xsd:string" name="Path"/>
+            <xsd:element type="xsd:string" name="TimeExpiration"/>
+            <xsd:element type="xsd:string" name="State"/>
+        </xsd:sequence>
+
+    </xsd:complexType>
+
+</xsd:schema>
