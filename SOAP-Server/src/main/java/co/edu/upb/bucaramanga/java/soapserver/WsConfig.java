@@ -36,6 +36,7 @@ public class WsConfig extends WsConfigurerAdapter {
         return wsdl11Definition;
     }
 
+
     @Bean
     public XsdSchema multiplePdfSchema(){
         return new SimpleXsdSchema(new ClassPathResource("schemas.xsd"));
