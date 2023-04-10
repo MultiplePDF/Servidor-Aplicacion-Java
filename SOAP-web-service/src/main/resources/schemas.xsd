@@ -1,6 +1,9 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
            targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
 
+
+
+
 	<!--	USER RELATED	-->
 	<!--	SignUp or user registration	-->
 	<xs:element name="registerRequest">
@@ -39,6 +42,21 @@
 	    </xs:complexType>
 	</xs:element>
 
-    
-    
+	<!--	Forgot password	-->
+	<xs:element name="forgotRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="email" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="forgotResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Successful" type="xs:boolean"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 </xs:schema>

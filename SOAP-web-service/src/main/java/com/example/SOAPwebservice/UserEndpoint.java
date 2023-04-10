@@ -1,19 +1,13 @@
 package com.example.SOAPwebservice;
 
-import javax.naming.AuthenticationException;
-
-import io.spring.guides.gs_producing_web_service.RegisterRequest;
-import io.spring.guides.gs_producing_web_service.RegisterResponse;
+import io.spring.guides.gs_producing_web_service.*;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import io.spring.guides.gs_producing_web_service.LoginRequest;
-import io.spring.guides.gs_producing_web_service.LoginResponse;
-
 @Endpoint
-public class ClientEndpoint {
+public class UserEndpoint {
 	private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
 
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "loginRequest")
@@ -58,6 +52,25 @@ public class ClientEndpoint {
 			response.setToken("An error occurred during registration");
 		}
 
+		return response;
+	}
+
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "forgotRequest")
+	@ResponsePayload
+	public ForgotResponse register(@RequestPayload ForgotRequest request) {
+		ForgotResponse response = new ForgotResponse();
+
+		String email = request.getEmail();
+
+		// TODO: conexión a la base de datos de Andrey y Yireth através de REST
+		// y enviar el email para que se proceda con su recuperación de contraseña
+		// a través del email retornar si fue exitoso o no el envio del correo
+
+//		pseudo codigo en comentarios:
+//		if(rest == email sent)
+			response.setSuccessful(true);
+//		else
+			response.setSuccessful(false);
 		return response;
 	}
 }
