@@ -10,8 +10,8 @@ public class User { private int _id;
 
     private String email;
 
-    public User(int _id, String password, String name, String lastname, String email) {
-        this._id = _id;
+    public User(int id, String password, String name, String lastname, String email) {
+        this._id = id;
         this.password = password;
         this.name = name;
         this.lastname = lastname;
