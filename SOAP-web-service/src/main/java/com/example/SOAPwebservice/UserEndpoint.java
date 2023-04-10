@@ -57,7 +57,7 @@ public class UserEndpoint {
 
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "forgotRequest")
 	@ResponsePayload
-	public ForgotResponse register(@RequestPayload ForgotRequest request) {
+	public ForgotResponse forgotPassword(@RequestPayload ForgotRequest request) {
 		ForgotResponse response = new ForgotResponse();
 
 		String email = request.getEmail();
