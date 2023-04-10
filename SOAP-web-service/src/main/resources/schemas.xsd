@@ -1,11 +1,31 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
            targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
 
-    
+	<!--	USER RELATED	-->
+	<!--	SignUp or user registration	-->
+	<xs:element name="registerRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="email" type="xs:string"/>
+				<xs:element name="password" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="registerResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="token" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!--	SignIn, Login or user authentication	-->
     <xs:element name="loginRequest">
 	    <xs:complexType>
 	        <xs:sequence>
-	            <xs:element name="username" type="xs:string"/>
+	            <xs:element name="email" type="xs:string"/>
 	            <xs:element name="password" type="xs:string"/>
 	        </xs:sequence>
 	    </xs:complexType>
