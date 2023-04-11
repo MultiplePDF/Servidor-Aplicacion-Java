@@ -44,33 +44,4 @@ public class FileEndpoint {
 
 	    return response;
 	}
-
-	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendfileRequest")
-	@ResponsePayload
-	public SendfileResponse sendFile(@RequestPayload SendfileRequest request) {
-		SendfileResponse response = new SendfileResponse();
-
-		String fileJSON = request.getFileJSON();
-		String token = request.getToken();
-
-		// TODO: conexión a la base de datos de Yireth y Andrey através de REST
-		// para validar el token, si es valido continua, sino error de autenticación
-
-		// TODO: CONEXION RMI
-
-		// pseudocodigo en comentarios
-
-//	    if (token es válido) {
-// enviar a RMI
-		response.setSuccess("Archivo enviado a conversión");
-//			else{
-		response.setSuccess("File not found");
-//			}
-//	    } else {
-
-		response.setSuccess("You session expired, please log in again");
-//	    }
-
-		return response;
-	}
 }

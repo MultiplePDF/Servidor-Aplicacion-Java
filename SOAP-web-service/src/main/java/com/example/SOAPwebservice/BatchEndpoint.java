@@ -16,6 +16,35 @@ import java.util.Date;
 public class BatchEndpoint {
 	private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
 
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendfileRequest")
+	@ResponsePayload
+	public SendBatchResponse sendFile(@RequestPayload SendBatchRequest request) {
+		SendBatchResponse response = new SendBatchResponse();
+
+		String listJSON = request.getListJSON();
+		String token = request.getToken();
+
+		// TODO: conexión a la base de datos de Yireth y Andrey através de REST
+		// para validar el token, si es valido continua, sino error de autenticación
+
+		// TODO: CONEXION RMI
+
+		// pseudocodigo en comentarios
+
+//	    if (token es válido) {
+// enviar a RMI
+		response.setSuccess("Archivo enviado a conversión");
+//			else{
+		response.setSuccess("File not found");
+//			}
+//	    } else {
+
+		response.setSuccess("You session expired, please log in again");
+//	    }
+
+		return response;
+	}
+
 	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "batchRequest")
 	@ResponsePayload
 	public BatchResponse getBatchDetails(@RequestPayload BatchRequest request) {
