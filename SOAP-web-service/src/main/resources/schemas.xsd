@@ -28,6 +28,24 @@
 
 
 	<!--	FILE RELATED	-->
+	<!--	Send file	-->
+	<xs:element name="sendfileRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="fileJSON" type="xs:string"/>
+				<xs:element name="token" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="sendfileResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Success" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 	<!--	Get file details	-->
 	<xs:element name="fileRequest">
 		<xs:complexType>
