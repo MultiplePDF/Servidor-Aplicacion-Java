@@ -14,7 +14,7 @@ import java.util.zip.GZIPInputStream;
 public class RestConnect {
     public static String connect(String route, String get_post, String params) throws IOException {
         try {
-            URL url = new URL("http://bd.bucaramanga.upb.edu.co:3000/"+route);
+            URL url = new URL(route);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod(get_post);
 //            System.out.println(con.getResponseCode());
@@ -51,7 +51,7 @@ public class RestConnect {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(connect("","GET",""));
-        System.out.println(connect("lote/uploadLotes","POST","idUsuario=2"));
+        System.out.println(connect("http://bd.bucaramanga.upb.edu.co:3000/","GET",""));
+        System.out.println(connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes","POST","idUsuario=2"));
     }
 }
