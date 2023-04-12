@@ -1,4 +1,4 @@
-import Modelos.SubLote;
+import Models.SubLote;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
