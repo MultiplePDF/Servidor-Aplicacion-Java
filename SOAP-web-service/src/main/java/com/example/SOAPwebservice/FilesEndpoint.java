@@ -14,9 +14,9 @@ import java.time.temporal.ChronoUnit;
 public class FilesEndpoint {
 	private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
 
-	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendfileRequest")
+	@PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendBatchRequest")
 	@ResponsePayload
-	public SendBatchResponse sendFile(@RequestPayload SendBatchRequest request) {
+	public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) {
 		SendBatchResponse response = new SendBatchResponse();
 
 		String listJSON = request.getListJSON();
