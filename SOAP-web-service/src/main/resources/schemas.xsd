@@ -6,7 +6,7 @@
 	<xs:element name="batchRequest">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="batchID" type="xs:string"/>
+				<xs:element name="userID" type="xs:string"/>
 				<xs:element name="token" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>
@@ -20,7 +20,7 @@
 				<xs:element name="FileQuantity" type="xs:int"/>
 				<xs:element name="Path" type="xs:string"/>
 				<xs:element name="TimeExpiration" type="xs:string"/>
-				<xs:element name="State" type="xs:string"/>
+				<xs:element name="State" type="xs:boolean"/>
 				<xs:element name="Success" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>

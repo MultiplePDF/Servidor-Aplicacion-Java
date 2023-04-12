@@ -15,8 +15,8 @@ public class LocalTesting {
         // TEST CONNECTION TO REST SERVERS
         RestConnect rest = new RestConnect();
         // System.out.println(rest.connect("http://bd.bucaramanga.upb.edu.co:3000/","GET",""));
-        String res = rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadFiles", "POST", "idLote=6435a9355ffcace83f7cc6e1");
-
+        String res = rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=2");
+//        System.out.println(res);
         //  TESTING JSON ARRAY CASTING
 //        String res = "[\n" +
 //                "    {\n" +
@@ -29,9 +29,9 @@ public class LocalTesting {
         for (int i = 0; i < jsonArr.length(); i++) {
             JSONObject jsonObj = jsonArr.getJSONObject(i);
             System.out.println(jsonObj);
-            System.out.println(jsonObj.getString("nombreArchivo"));
-            System.out.println(jsonObj.getString("rutaArchivo"));
-            System.out.println(jsonObj.getDouble("tamanno"));
+            System.out.println(jsonObj.getString("createdAt"));
+            System.out.println(jsonObj.getInt("numeroArchivos"));
+            System.out.println(jsonObj.getString("vigencia"));
         }
 
 
