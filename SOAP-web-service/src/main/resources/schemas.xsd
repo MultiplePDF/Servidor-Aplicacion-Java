@@ -26,6 +26,24 @@
 		</xs:complexType>
 	</xs:element>
 
+	<!--	Send batch	-->
+	<xs:element name="sendBatchRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="listJSON" type="xs:string"/>
+				<xs:element name="token" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="sendBatchResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Success" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
 
 	<!--	FILE RELATED	-->
 	<!--	Get file details	-->
