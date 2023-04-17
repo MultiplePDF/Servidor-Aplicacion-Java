@@ -10,10 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-import com.example.Interfaces.contratoRMI;
-import com.example.Models.Archivo;
-import com.example.Models.SubLote;
-
 @Endpoint
 public class FilesEndpoint {
 	private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";

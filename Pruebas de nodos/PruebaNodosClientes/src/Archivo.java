@@ -1,21 +1,38 @@
-package Modelos;
-
 import java.io.Serializable;
 
 public class Archivo implements Serializable {
+
 	int idArchivo;
 	String idSubLote;
 	String url;
 	String base64;
 	String nombre;
+	
+	public int getIdArchivo() {
+		return idArchivo;
+	}
+	
+	public void setIdArchivo( int idArchivo ) {
+		this.idArchivo = idArchivo;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	
+	public void setUrl( String url ) {
+		this.url = url;
+	}
+	
+	public Archivo( String idSubLote, String base64, String nombre) {
 
-	public Archivo(String idSubLote, String base64, String nombre) {
 		this.idSubLote = idSubLote;
 		this.base64 = base64;
 		this.nombre = nombre;
 	}
 
 	public Archivo(String idSubLote, String url, int idArchivo) {
+
 		this.idSubLote = idSubLote;
 		this.url = url;
 		this.idArchivo = idArchivo;
@@ -50,4 +67,8 @@ public class Archivo implements Serializable {
 		return "Archivo [idArchivo=" + idArchivo + ", idSubLote=" + idSubLote + ", url=" + url + ", base64=" + base64
 				+ ", nombre=" + nombre + "]";
 	}
+
+	
+	
+
 }
