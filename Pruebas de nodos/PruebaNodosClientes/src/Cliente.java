@@ -58,7 +58,10 @@ public class Cliente {
 			Archivo[] recibir = nuevo.archivos;
 			
 			for (int i = 0; i<recibir.length;i++) {
+				System.out.println("Archivo");
 				System.out.println(recibir[i].getIdArchivo());
+				System.out.println("URL");
+
 				System.out.println(recibir[i].getUrl());
 			}
 

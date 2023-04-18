@@ -1,3 +1,5 @@
+package com.example.SOAPwebservice;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

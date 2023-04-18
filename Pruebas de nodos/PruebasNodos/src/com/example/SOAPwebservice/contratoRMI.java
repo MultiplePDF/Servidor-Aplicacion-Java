@@ -1,3 +1,4 @@
+package com.example.SOAPwebservice;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

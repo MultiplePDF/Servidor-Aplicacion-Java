@@ -1,3 +1,4 @@
+package com.example.SOAPwebservice;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -50,7 +51,7 @@ public class Sublote implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Sublote [idSublote=" + idSublote + ", idLote=" + idLote + ", idUsuario=" + idUsuario + ", archivos="
+		return "com.example.SOAPwebservice.Sublote [idSublote=" + idSublote + ", idLote=" + idLote + ", idUsuario=" + idUsuario + ", archivos="
 				+ Arrays.toString(archivos) + "]";
 	}
 	

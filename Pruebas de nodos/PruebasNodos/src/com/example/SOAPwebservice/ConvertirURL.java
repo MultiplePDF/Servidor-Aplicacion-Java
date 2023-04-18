@@ -1,7 +1,6 @@
-import java.io.BufferedWriter;
+package com.example.SOAPwebservice;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,7 +51,7 @@ public class ConvertirURL implements Callable<Archivo> {
 		return archivopdf;
 	}
 
-	public String convertirURL(Archivo obj) throws IOException {
+	public String convertirURL( Archivo obj) throws IOException {
 
 		String url = obj.url;
 		String titulo = "";

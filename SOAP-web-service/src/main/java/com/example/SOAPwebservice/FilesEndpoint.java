@@ -6,6 +6,7 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
+import java.rmi.Naming;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -27,11 +28,15 @@ public class FilesEndpoint {
 
 		// TODO: CONEXION RMI
 
+
+
+
 		// pseudocodigo en comentarios
 
 //	    if (token es válido) {
 // enviar a RMI
-		response.setSuccess("Archivo enviado a conversión");
+		/*
+		response.setSuccess("com.example.SOAPwebservice.Archivo enviado a conversión");
 //			else{
 		response.setSuccess("File not found");
 //			}
@@ -39,7 +44,7 @@ public class FilesEndpoint {
 
 		response.setSuccess("You session expired, please log in again");
 //	    }
-
+		*/
 		return response;
 	}
 

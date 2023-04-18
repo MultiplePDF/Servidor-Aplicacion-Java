@@ -1,7 +1,6 @@
-import java.io.File;
-import java.io.FileInputStream;
+package com.example.SOAPwebservice;
+
 import java.rmi.Naming;
-import java.util.Base64;
 
 public class Cliente {
 	public static void main(String[] args) {
@@ -30,9 +29,9 @@ public class Cliente {
 			
 			 
 
-			Archivo cliente = new Archivo("1", base64String, "EJERCICIO APLICACI�N CONTABLE - ENERO 2022.pptx");
-			Archivo cliente2 = new Archivo("2", base64String1, "DiagramaCasoUso.docx");
-			Archivo cliente3 = new Archivo("3", base64String2, "ContabilidadAnalisis_ALIVAL.xlsx");
+			com.example.SOAPwebservice.Archivo cliente = new com.example.SOAPwebservice.Archivo("1", base64String, "EJERCICIO APLICACI�N CONTABLE - ENERO 2022.pptx");
+			com.example.SOAPwebservice.Archivo cliente2 = new com.example.SOAPwebservice.Archivo("2", base64String1, "DiagramaCasoUso.docx");
+			com.example.SOAPwebservice.Archivo cliente3 = new com.example.SOAPwebservice.Archivo("3", base64String2, "ContabilidadAnalisis_ALIVAL.xlsx");
 			*/
 			
 			
@@ -52,7 +51,7 @@ public class Cliente {
 			contratoRMI server = (contratoRMI) Naming.lookup("rmi://10.153.74.100:1902/convertidor");
 			System.out.print("Usuario conectado");
 			
-			//Sublote nuevo = server.conversionOffice(completo);
+			//com.example.SOAPwebservice.Sublote nuevo = server.conversionOffice(completo);
 			
 			Sublote nuevo =server.conversionURL(completo);
 			

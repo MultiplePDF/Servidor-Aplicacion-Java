@@ -66,7 +66,7 @@ public class Archivo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Archivo [idArchivo=" + idArchivo + ", idSubLote=" + idSubLote + ", url=" + url + ", base64=" + base64
+		return "com.example.SOAPwebservice.Archivo [idArchivo=" + idArchivo + ", idSubLote=" + idSubLote + ", url=" + url + ", base64=" + base64
 				+ ", nombre=" + nombre + "]";
 	}
 
