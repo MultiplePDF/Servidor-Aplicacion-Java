@@ -18,11 +18,11 @@ import java.time.temporal.ChronoUnit;
 @Endpoint
 public class FilesEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
-
+    static final String fakeToken = "abc123";
     //	Batch methods
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendfileRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendBatchRequest")
     @ResponsePayload
-    public SendBatchResponse sendFile(@RequestPayload SendBatchRequest request) {
+    public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) {
         SendBatchResponse response = new SendBatchResponse();
 
         String listJSON = request.getListJSON();
@@ -31,28 +31,27 @@ public class FilesEndpoint {
         // TODO: conexión a la base de datos de Yireth y Andrey através de REST
         // para validar el token, si es valido continua, sino error de autenticación
 
+
         // TODO: CONEXION RMI
 
         // pseudocodigo en comentarios
 
-//	    if (token es válido) {
-// enviar a RMI
-        response.setSuccess("Archivo enviado a conversión");
-//			else{
-        response.setSuccess("File not found");
-//			}
-//	    } else {
-
-        response.setSuccess("You session expired, please log in again");
-//	    }
+	    if (fakeToken.equals(token)) {
+            // enviar a RMI
+            response.setSuccess("Files sent to conversion");
+            // todo: redirigir al metodo para descargar los archivos
+//            response.setSuccess("File not found");
+        }else{
+            response.setSuccess("You session expired, please log in again");
+        }
 
         return response;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "batchRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBatchDetailsRequest")
     @ResponsePayload
-    public BatchResponse getBatchDetails(@RequestPayload BatchRequest request) {
-        BatchResponse response = new BatchResponse();
+    public GetBatchDetailsResponse getBatchDetails(@RequestPayload GetBatchDetailsRequest request) {
+        GetBatchDetailsResponse response = new GetBatchDetailsResponse();
 
         String userID = request.getUserID();
         String token = request.getToken();
@@ -60,7 +59,7 @@ public class FilesEndpoint {
         // TODO: conexión a la base de datos de Yireth y Andrey através de REST
         // para validar el token, si es valido continua, sino error de autenticación
 
-        // if (token es válido) {
+        if (fakeToken.equals(token)) {
         RestConnect rest = new RestConnect();
         try {
             String res = rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=" + userID);
@@ -82,46 +81,10 @@ public class FilesEndpoint {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        //} else {
-        // If the user is not authenticated, return an error message
-        // response.setSuccess("You session expired, please log in again");
-//	    }
-        return response;
-    }
-
-    // File methods
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "fileRequest")
-    @ResponsePayload
-    public FileResponse getFileDetails(@RequestPayload FileRequest request) {
-        FileResponse response = new FileResponse();
-
-        String fileID = request.getFileID();
-        String token = request.getToken();
-
-        // TODO: conexión a la base de datos de Yireth y Andrey através de REST
-        // para validar el token, si es valido continua, sino error de autenticación
-
-        // TODO: conexión a la base de datos de Henry, Wilson y Mario através de REST
-        // y devolver toda la información del archivo seleccionado
-
-        // pseudocodigo en comentarios
-
-//	    if (token es válido) {
-//			if (fileID está en la base de datos)
-        response.setFilename("hola.pdf");
-        response.setPath("mulltiplepdf.com/hola.pdf");
-        response.setSize(2.5F);
-//			else{
-        response.setSuccess("File not found");
-//			}
-//	    } else {
-        // If the user is not authenticated, return an error message
-        response.setFilename(null); //probably not needed
-        response.setPath(null); //probably not needed
-        response.setSize(0); //probably not needed
-        response.setSuccess("You session expired, please log in again");
-//	    }
-
+        } else {
+//         If the user is not authenticated, return an error message
+         response.setSuccess("You session expired, please log in again");
+	    }
         return response;
     }
 
