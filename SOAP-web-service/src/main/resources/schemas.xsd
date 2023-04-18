@@ -111,7 +111,8 @@
 	<xs:element name="getUserDetailsResponse">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="Successful" type="xs:boolean"/>
+				<xs:element name="name" type="xs:string"/>
+				<xs:element name="email" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -128,7 +129,7 @@
 	<xs:element name="putUserDetailsResponse">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="Successful" type="xs:boolean"/>
+				<xs:element name="Successful" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
