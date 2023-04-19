@@ -129,10 +129,7 @@ public class FilesEndpoint {
                     // todo: do the substraction of dates (vigencia-dateCreated) and set it in setTimeExpiration
                     response.setTimeExpiration(vigencia);
                 }
-            } catch (IOException e) {
-                response.setSuccess("An error occurred during connection to the server");
-                throw new RuntimeException(e);
-            } catch (JSONException e) {
+            } catch (JSONException | IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
