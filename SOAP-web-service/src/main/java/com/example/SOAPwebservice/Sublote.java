@@ -7,17 +7,15 @@ public class Sublote implements Serializable{
 	
 	
 	String idSublote;
-	String idLote;
 	String idUsuario;
 	Archivo[] archivos;
 	
 	
 	
 	
-	public Sublote(String idSublote, String idLote, String idUsuario, Archivo[] archivos) {
+	public Sublote(String idSublote, String idUsuario, Archivo[] archivos) {
 		super();
 		this.idSublote = idSublote;
-		this.idLote = idLote;
 		this.idUsuario = idUsuario;
 		this.archivos = archivos;
 	}
@@ -28,12 +26,6 @@ public class Sublote implements Serializable{
 	}
 	public void setIdSublote(String idSublote) {
 		this.idSublote = idSublote;
-	}
-	public String getIdLote() {
-		return idLote;
-	}
-	public void setIdLote(String idLote) {
-		this.idLote = idLote;
 	}
 	public String getIdUsuario() {
 		return idUsuario;
@@ -51,7 +43,7 @@ public class Sublote implements Serializable{
 
 	@Override
 	public String toString() {
-		return "com.example.SOAPwebservice.Sublote [idSublote=" + idSublote + ", idLote=" + idLote + ", idUsuario=" + idUsuario + ", archivos="
+		return "com.example.SOAPwebservice.Sublote [idSublote=" + idSublote + ", idUsuario=" + idUsuario + ", archivos="
 				+ Arrays.toString(archivos) + "]";
 	}
 	
