@@ -1,141 +1,150 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
            targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
 
-	<!--	USER RELATED	-->
-	<!--	SignUp or user registration	#1 -->
-	<xs:element name="registerRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="name" type="xs:string"/>
-				<xs:element name="email" type="xs:string"/>
-				<xs:element name="password" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <!--	USER RELATED	-->
+    <!--	SignUp or user registration	#1 -->
+    <xs:element name="registerRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="email" type="xs:string"/>
+                <xs:element name="password" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:element name="registerResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="token" type="xs:string"/>
-				<xs:element name="response" type="xs:string"/>
-				<xs:element name="successful" type="xs:boolean"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <xs:element name="registerResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="token" type="xs:string"/>
+                <xs:element name="response" type="xs:string"/>
+                <xs:element name="successful" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<!--	SignIn, Login or user authentication #2	-->
+    <!--	SignIn, Login or user authentication #2	-->
     <xs:element name="loginRequest">
-	    <xs:complexType>
-	        <xs:sequence>
-	            <xs:element name="email" type="xs:string"/>
-	            <xs:element name="password" type="xs:string"/>
-	        </xs:sequence>
-	    </xs:complexType>
-	</xs:element>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="email" type="xs:string"/>
+                <xs:element name="password" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:element name="loginResponse">
-	    <xs:complexType>
-	        <xs:sequence>
-	            <xs:element name="token" type="xs:string"/>
-				<xs:element name="response" type="xs:string"/>
-				<xs:element name="successful" type="xs:boolean"/>
-	        </xs:sequence>
-	    </xs:complexType>
-	</xs:element>
+    <xs:element name="loginResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="token" type="xs:string"/>
+                <xs:element name="response" type="xs:string"/>
+                <xs:element name="successful" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<!--	Forgot password	#3 -->
-	<xs:element name="forgotRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="email" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <!--	Forgot password	#3 -->
+    <xs:element name="forgotRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="email" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:element name="forgotResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="Successful" type="xs:boolean"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <xs:element name="forgotResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+                <xs:element name="successful" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<!--	get User Details	#4 -->
-	<xs:element name="getUserDetailsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="email" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <!--	get User Details	#4 -->
+    <xs:element name="getUserDetailsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userID" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:element name="getUserDetailsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="name" type="xs:string"/>
-				<xs:element name="email" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <xs:element name="getUserDetailsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="email" type="xs:string"/>
+                <xs:element name="response" type="xs:string"/>
+                <xs:element name="successful" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<!--	edit user details	#5 -->
-	<xs:element name="putUserDetailsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="email" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <!--	edit user details	#5 -->
+    <xs:element name="editUserDetailsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userID" type="xs:string"/>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="email" type="xs:string"/>
+                <xs:element name="password" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:element name="putUserDetailsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="Successful" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <xs:element name="editUserDetailsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+                <xs:element name="successful" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<!--	BATCH RELATED	-->
-	<!--	Send batch	#6 -->
-	<xs:element name="sendBatchRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="listJSON" type="xs:string"/>
-				<xs:element name="token" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <!--	BATCH RELATED	-->
+    <!--	Send batch	#6 -->
+    <xs:element name="sendBatchRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="listJSON" type="xs:string"/>
+                <xs:element name="token" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:element name="sendBatchResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="Success" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <xs:element name="sendBatchResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+                <xs:element name="successful" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<!--	Get batch details #7	-->
-	<xs:element name="getBatchDetailsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="userID" type="xs:string"/>
-				<xs:element name="token" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <!--	Get batch details #7	-->
+    <xs:element name="getBatchDetailsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userID" type="xs:string"/>
+                <xs:element name="token" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
-	<xs:element name="getBatchDetailsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="DateCreated" type="xs:string"/>
-				<xs:element name="FileQuantity" type="xs:int"/>
-				<xs:element name="Path" type="xs:string"/>
-				<xs:element name="TimeExpiration" type="xs:string"/>
-				<xs:element name="State" type="xs:boolean"/>
-				<xs:element name="Success" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+    <xs:element name="getBatchDetailsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dateCreated" type="xs:string"/>
+                <xs:element name="fileQuantity" type="xs:int"/>
+                <xs:element name="path" type="xs:string"/>
+                <xs:element name="timeExpiration" type="xs:string"/>
+                <xs:element name="state" type="xs:boolean"/>
+                <xs:element name="response" type="xs:string"/>
+                <xs:element name="successful" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
 
 </xs:schema>

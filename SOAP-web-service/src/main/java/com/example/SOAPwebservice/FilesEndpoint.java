@@ -93,12 +93,14 @@ public class FilesEndpoint {
 //                nodo2.conversionOffice(batch2);
 //                nodo3.conversionOffice(batch3);
             }
-            response.setSuccess("Files sent to conversion");
-            // todo: redirigir al metodo para descargar los archivos
-        } else {
-            response.setSuccess("You session expired, please log in again");
-        }
 
+            // todo: redirigir al metodo para descargar los archivos
+            response.setSuccessful(true);
+            response.setResponse("Archivos convertidos");
+        } else {
+            response.setSuccessful(false);
+            response.setResponse("Token inválido o expirado");
+        }
         return response;
     }
 
@@ -118,7 +120,8 @@ public class FilesEndpoint {
             try {
                 String res = rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=" + userID);
                 if (res.equals("")) {
-                    response.setSuccess("Batch not found");
+                    response.setResponse("Lote no encontrado");
+                    response.setSuccessful(false);
                 } else {
                     JSONArray jsonArr = new JSONArray(res);
                     JSONObject jsonObj = jsonArr.getJSONObject(0);
@@ -134,7 +137,8 @@ public class FilesEndpoint {
             }
         } else {
 //         If the user is not authenticated, return an error message
-            response.setSuccess("You session expired, please log in again");
+            response.setResponse("Token inválido o expirado");
+            response.setSuccessful(false);
         }
         return response;
     }

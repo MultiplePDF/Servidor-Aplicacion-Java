@@ -26,9 +26,9 @@ public class UserEndpoint {
         String password = request.getPassword();
         try {
             RestConnect rest = new RestConnect();
-            String params = "nombre="+name+
-                    "&email="+email+
-                    "&password="+password;
+            String params = "nombre=" + name +
+                    "&email=" + email +
+                    "&password=" + password;
 
             String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/register", "POST", params);
             if (!res.equals("")) {
@@ -38,20 +38,20 @@ public class UserEndpoint {
                     response.setToken(token);
                     response.setSuccessful(true);
                     response.setResponse("Success");
-                }catch (JSONException e){
-                    try{
+                } catch (JSONException e) {
+                    try {
                         JSONObject jsonObj = new JSONObject(res);
                         response.setToken("");
                         response.setSuccessful(false);
                         response.setResponse(jsonObj.getString("error"));
-                    }catch (JSONException e2){
+                    } catch (JSONException e2) {
                         // in case of an unexpected error
                         response.setToken("");
                         response.setSuccessful(false);
                         response.setResponse(e2.toString());
                     }
                 }
-            }else{
+            } else {
                 response.setToken("");
             }
         } catch (IOException e) {
@@ -70,8 +70,8 @@ public class UserEndpoint {
 
         try {
             RestConnect rest = new RestConnect();
-            String params = "email="+email+
-                    "&password="+password;
+            String params = "email=" + email +
+                    "&password=" + password;
             String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/login", "POST", params);
             if (!res.equals("")) {
                 try {
@@ -80,20 +80,20 @@ public class UserEndpoint {
                     response.setToken(token);
                     response.setSuccessful(true);
                     response.setResponse("Success");
-                }catch (JSONException e){
-                    try{
+                } catch (JSONException e) {
+                    try {
                         JSONObject jsonObj = new JSONObject(res);
                         response.setToken("");
                         response.setSuccessful(false);
                         response.setResponse(jsonObj.getString("error"));
-                    }catch (JSONException e2){
+                    } catch (JSONException e2) {
                         // in case of an unexpected error
                         response.setToken("");
                         response.setSuccessful(false);
                         response.setResponse(e2.toString());
                     }
                 }
-            }else{
+            } else {
                 response.setToken("");
             }
         } catch (IOException e) {
@@ -110,15 +110,13 @@ public class UserEndpoint {
 
         String email = request.getEmail();
 
-        // TODO: conexión a la base de datos de Andrey y Yireth através de REST
-        // y enviar el email para que se proceda con su recuperación de contraseña
-        // a través del email retornar si fue exitoso o no el envio del correo
-
-//		pseudo codigo en comentarios:
+        // TODO: esperar que el servidor Rest lo tenga listo para implementar la conexión
 //		if(rest == email sent)
         response.setSuccessful(true);
+        response.setResponse("¡Email enviado!");
 //		else
         response.setSuccessful(false);
+        response.setResponse("Error al intentar recuperar el contraseña");
         return response;
     }
 
@@ -127,26 +125,31 @@ public class UserEndpoint {
     public GetUserDetailsResponse getUserDetails(@RequestPayload GetUserDetailsRequest request) {
         GetUserDetailsResponse response = new GetUserDetailsResponse();
 
-        String email = request.getEmail();
+        String userID = request.getUserID();
 
-        // TODO: conexión a la base de datos de Andrey y Yireth através de REST
+        // TODO: esperar que el servidor Rest lo tenga listo para implementar la conexión
 
         response.setEmail(fakeEmail);
         response.setName(fakeName);
+        response.setResponse("Ocurrió un error al obtener los detalles de usuario");
+        response.setSuccessful(false);
         return response;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "putUserDetailsRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "editUserDetailsRequest")
     @ResponsePayload
-    public PutUserDetailsResponse putUserDetails(@RequestPayload PutUserDetailsRequest request) {
-        PutUserDetailsResponse response = new PutUserDetailsResponse();
+    public EditUserDetailsResponse editUserDetails(@RequestPayload EditUserDetailsRequest request) {
+        EditUserDetailsResponse response = new EditUserDetailsResponse();
 
-        String email = request.getEmail();
+        // TODO: esperar que el servidor Rest lo tenga listo para implementar la conexión
+        String userID = request.getUserID();
 
-        // TODO: conexión a la base de datos de Andrey y Yireth através de REST
+        String newName = request.getName();
+        String newEmail = request.getEmail();
+        String newPass = request.getPassword();
 
-        response.setSuccessful("User details succesfully saved");
+        response.setResponse("Detalles del usuario editados correctamente");
+        response.setSuccessful(true);
         return response;
     }
-
 }
