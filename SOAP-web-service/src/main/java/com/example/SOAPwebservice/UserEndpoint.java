@@ -16,9 +16,6 @@ public class UserEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
     static final String fakeEmail = "a@gmail.com";
     static final String fakeName = "Angela";
-    static final String fakeLastName = "Remolina";
-    static final String fakePass = "123";
-    static final String fakeToken = "abc123";
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "registerRequest")
     @ResponsePayload
@@ -68,20 +65,39 @@ public class UserEndpoint {
     @ResponsePayload
     public LoginResponse login(@RequestPayload LoginRequest request) {
         LoginResponse response = new LoginResponse();
-
         String email = request.getEmail();
         String password = request.getPassword();
 
-        // TODO: conexión a la base de datos de Andrey y Yireth através de REST
-        // y comprobar que este usuario esté registrado y las credenciales son correctas
-
-        if (email.equals(fakeEmail) && password.equals(fakePass)) {
-
-
-            response.setToken(fakeToken);
-
-        } else {
-            response.setToken("Invalid username or password");
+        try {
+            RestConnect rest = new RestConnect();
+            String params = "email="+email+
+                    "&password="+password;
+            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/login", "POST", params);
+            if (!res.equals("")) {
+                try {
+                    JSONObject jsonObj = new JSONObject(res);
+                    String token = jsonObj.getString("token");
+                    response.setToken(token);
+                    response.setSuccessful(true);
+                    response.setResponse("Success");
+                }catch (JSONException e){
+                    try{
+                        JSONObject jsonObj = new JSONObject(res);
+                        response.setToken("");
+                        response.setSuccessful(false);
+                        response.setResponse(jsonObj.getString("error"));
+                    }catch (JSONException e2){
+                        // in case of an unexpected error
+                        response.setToken("");
+                        response.setSuccessful(false);
+                        response.setResponse(e2.toString());
+                    }
+                }
+            }else{
+                response.setToken("");
+            }
+        } catch (IOException e) {
+            System.out.println(e);
         }
 
         return response;
