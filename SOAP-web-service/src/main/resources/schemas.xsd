@@ -1,49 +1,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
            targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
 
-	<!--	BATCH RELATED	-->
-	<!--	Send batch	#6 -->
-	<xs:element name="sendBatchRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="listJSON" type="xs:string"/>
-				<xs:element name="token" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="sendBatchResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="Success" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<!--	Get batch details #7	-->
-	<xs:element name="getBatchDetailsRequest">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="userID" type="xs:string"/>
-				<xs:element name="token" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
-	<xs:element name="getBatchDetailsResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="IdUser" type="xs:string"/>
-				<xs:element name="DateCreated" type="xs:string"/>
-				<xs:element name="FileQuantity" type="xs:int"/>
-				<xs:element name="Path" type="xs:string"/>
-				<xs:element name="TimeExpiration" type="xs:string"/>
-				<xs:element name="State" type="xs:boolean"/>
-				<xs:element name="Success" type="xs:string"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-
 	<!--	USER RELATED	-->
 	<!--	SignUp or user registration	#1 -->
 	<xs:element name="registerRequest">
@@ -130,6 +87,48 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="Successful" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!--	BATCH RELATED	-->
+	<!--	Send batch	#6 -->
+	<xs:element name="sendBatchRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="listJSON" type="xs:string"/>
+				<xs:element name="token" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="sendBatchResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Success" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!--	Get batch details #7	-->
+	<xs:element name="getBatchDetailsRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="userID" type="xs:string"/>
+				<xs:element name="token" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="getBatchDetailsResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="DateCreated" type="xs:string"/>
+				<xs:element name="FileQuantity" type="xs:int"/>
+				<xs:element name="Path" type="xs:string"/>
+				<xs:element name="TimeExpiration" type="xs:string"/>
+				<xs:element name="State" type="xs:boolean"/>
+				<xs:element name="Success" type="xs:string"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>

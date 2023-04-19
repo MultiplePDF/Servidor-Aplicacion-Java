@@ -9,6 +9,7 @@ public class Archivo implements Serializable {
 	String url;
 	String base64;
 	String nombre;
+	int size;
 	
 	public int getIdArchivo() {
 		return idArchivo;
@@ -26,7 +27,7 @@ public class Archivo implements Serializable {
 		this.url = url;
 	}
 	
-	public Archivo( String idSubLote, String base64, String nombre) {
+	public Archivo(String idSubLote, String base64, String nombre) {
 
 		this.idSubLote = idSubLote;
 		this.base64 = base64;
@@ -62,6 +63,14 @@ public class Archivo implements Serializable {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 
 	@Override

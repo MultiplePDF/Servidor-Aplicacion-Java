@@ -13,15 +13,16 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @Endpoint
 public class FilesEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
     static final String fakeToken = "abc123";
-    //	Batch methods
+    static final String fakelist = "abc123";
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendBatchRequest")
     @ResponsePayload
-    public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) {
+    public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) throws JSONException {
         SendBatchResponse response = new SendBatchResponse();
 
         String listJSON = request.getListJSON();
@@ -29,15 +30,36 @@ public class FilesEndpoint {
 
         // TODO: conexión a la base de datos de Yireth y Andrey através de REST
         // para validar el token, si es valido continua, sino error de autenticación
-
-
-        // TODO: CONEXION RMI
-
-        // pseudocodigo en comentarios
-
 	    if (fakeToken.equals(token)) {
             // enviar a RMI
             response.setSuccess("Files sent to conversion");
+            JSONArray jsonArr = new JSONArray(listJSON);
+            for (int i = 0; i < jsonArr.length(); i++) {
+                JSONObject jsonObj = jsonArr.getJSONObject(i);
+                System.out.println(jsonObj);
+                // {"idFile":1, - int
+                // "base64":"123456789", - string
+                // "fileName":"ejemplo", - string
+                // "fileExtension":".docx", - string si es url poner "URL"
+                // "size":13 - int en kilobytes
+                // }
+                String idSubBatch = String.valueOf(new Date().getTime());
+                int idFile = jsonObj.getInt("idFile");
+                String type = jsonObj.getString("fileExtension");
+                String base64 = jsonObj.getString("base64"); //if url this contains the link
+                String fileName = jsonObj.getString("fileName");
+                int size = jsonObj.getInt("size");
+                Archivo file;
+                if(type.equals("URL")){
+                    file = new Archivo(idSubBatch, base64, idFile);
+                }else{
+                    file = new Archivo(idSubBatch, base64, fileName);
+                }
+
+
+
+                // TODO: CONEXION RMI
+            }
             // todo: redirigir al metodo para descargar los archivos
 //            response.setSuccess("File not found");
         }else{
