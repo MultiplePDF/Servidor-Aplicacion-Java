@@ -14,8 +14,6 @@ import java.io.IOException;
 @Endpoint
 public class UserEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
-    static final String fakeEmail = "a@gmail.com";
-    static final String fakeName = "Angela";
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "registerRequest")
     @ResponsePayload
@@ -129,8 +127,8 @@ public class UserEndpoint {
 
         // TODO: esperar que el servidor Rest lo tenga listo para implementar la conexión
 
-        response.setEmail(fakeEmail);
-        response.setName(fakeName);
+        response.setEmail("email resultado del fetch");
+        response.setName("nombre resultado del fetch");
         response.setResponse("Ocurrió un error al obtener los detalles de usuario");
         response.setSuccessful(false);
         return response;
