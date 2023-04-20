@@ -42,7 +42,7 @@ public class FilesEndpoint {
                         // crear sublote para enviar al servidor RMI
                         String idSubBatch = String.valueOf(new Date().getTime());
                         JSONArray jsonArr = new JSONArray(listJSON); //[{},{},{}]
-                        ArrayList<Archivo> archivos1List = new ArrayList<>();
+                        ArrayList<File> archivos1List = new ArrayList<>();
                         // ArrayList<Archivo> archivos2List = new ArrayList<>();
                         // ArrayList<Archivo>archivos3List = new ArrayList<>();
                         String type = "";
@@ -60,11 +60,11 @@ public class FilesEndpoint {
                             String base64 = jsonObj.getString("base64"); //if url this contains the link
                             String fileName = jsonObj.getString("fileName");
                             int size = jsonObj.getInt("size");
-                            Archivo file;
+                            File file;
                             if (type.equals("URL")) {
-                                file = new Archivo(idSubBatch, base64, idFile);
+                                file = new File(idSubBatch, base64, idFile);
                             } else {
-                                file = new Archivo(idSubBatch, base64, fileName);
+                                file = new File(idSubBatch, base64, fileName);
                             }
 
                             archivos1List.add(file);
@@ -72,9 +72,9 @@ public class FilesEndpoint {
                             // archivos3List.add(file);
 
                         }
-                        Archivo[] archivos1 = archivos1List.toArray(new Archivo[archivos1List.size()]);
+                        File[] archivos1 = archivos1List.toArray(new File[archivos1List.size()]);
                         System.out.println("array");
-                        for (Archivo x : archivos1) {
+                        for (File x : archivos1) {
                             System.out.println(x.toString());
                         }
                         // Archivo[] archivos2 = archivos2List.toArray(new Archivo[archivos2List.size()]);
@@ -84,17 +84,17 @@ public class FilesEndpoint {
                         // hacerlo en una funición aparte que se pueda llamar en cualquier lugar
                         // String userID = getUserIDByToken(token);
                         String fakeid = "2";
-                        Sublote batch1 = new Sublote(idSubBatch, fakeid, archivos1);
+                        SubBatch batch1 = new SubBatch(idSubBatch, fakeid, archivos1);
                         //            Sublote batch2 = new Sublote(idSubBatch, fakeid, archivos2);
                         //            Sublote batch3 = new Sublote(idSubBatch, fakeid, archivos3);
 
-                        contratoRMI nodo1 = ProducingWebServiceApplication.nodo1;
+                        InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
                         // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
                         // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
 
-                        Sublote batchPDF1;
-                        Sublote batchPDF2;
-                        Sublote batchPDF3;
+                        SubBatch batchPDF1;
+                        SubBatch batchPDF2;
+                        SubBatch batchPDF3;
                         if (type.equals("URL")) {
                             batchPDF1 = nodo1.conversionURL(batch1);
                             // batchPDF2 = nodo2.conversionURL(batch2);

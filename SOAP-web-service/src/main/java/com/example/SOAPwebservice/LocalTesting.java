@@ -1,6 +1,5 @@
 package com.example.SOAPwebservice;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,17 +34,17 @@ public class LocalTesting {
 //            System.out.println(jsonObj.getString("vigencia"));
 //        }
 
-        ArrayList<Archivo> archivos1List = new ArrayList<>();
-        archivos1List.add(new Archivo("a","sss","hola"));
-        archivos1List.add(new Archivo("a","qqq","chao"));
-        archivos1List.add(new Archivo("a","zzz","bueno"));
-        archivos1List.add(new Archivo("a","ccc","malo"));
-        Archivo[] archivos1 = archivos1List.toArray(new Archivo[archivos1List.size()]);
+        ArrayList<File> archivos1List = new ArrayList<>();
+        archivos1List.add(new File("a","sss","hola"));
+        archivos1List.add(new File("a","qqq","chao"));
+        archivos1List.add(new File("a","zzz","bueno"));
+        archivos1List.add(new File("a","ccc","malo"));
+        File[] archivos1 = archivos1List.toArray(new File[archivos1List.size()]);
 //        for (Archivo x:archivos1) {
 //            System.out.println(x.toString());
 //        }
 
-        Sublote b = new Sublote("a","2",archivos1);
+        SubBatch b = new SubBatch("a","2",archivos1);
         System.out.println(b.toString());
         JSONObject a = new JSONObject(b.toString());
         System.out.println(a);
