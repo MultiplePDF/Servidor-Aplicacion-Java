@@ -1,6 +1,7 @@
 package com.example.SOAPwebservice;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Archivo implements Serializable {
 
@@ -75,8 +76,13 @@ public class Archivo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "com.example.SOAPwebservice.Archivo [idArchivo=" + idArchivo + ", idSubLote=" + idSubLote + ", url=" + url + ", base64=" + base64
-				+ ", nombre=" + nombre + "]";
+		return "{\n" +
+			"        \"fileID\": "+idArchivo+",\n" +
+			"        \"subBatchID\": \""+idSubLote+"\",\n" +
+			"        \"url\": \""+ url +"\",\n" +
+			"        \"base64\": \""+ base64 +"\",\n" +
+			"        \"fileName\": \""+ nombre +"\",\n" +
+			"    }";
 	}
 
 	

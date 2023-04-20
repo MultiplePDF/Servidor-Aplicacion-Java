@@ -22,83 +22,120 @@ public class FilesEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
     static final String fakeToken = "abc123";
     static final String fakelist = "abc123";
-    static final String fakeid = "2";
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendBatchRequest")
     @ResponsePayload
     public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) throws JSONException, RemoteException {
+        // 1. obtener los datos de los clientes desde SOAP
         SendBatchResponse response = new SendBatchResponse();
-
         String listJSON = request.getListJSON();
         String token = request.getToken();
+        try {
+            // 2. conectarse al servidor de autenticación REST
+            RestConnect rest = new RestConnect();
+            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/validate", "GET", token);
+            if (!res.equals("")) {
+                try {
+                    JSONObject jsonRes = new JSONObject(res);
+                    String response_str = jsonRes.getString("message");
+                    if (response_str.equals("Bienvenido al sistema")) {
+                        // crear sublote para enviar al servidor RMI
+                        String idSubBatch = String.valueOf(new Date().getTime());
+                        JSONArray jsonArr = new JSONArray(listJSON); //[{},{},{}]
+                        ArrayList<Archivo> archivos1List = new ArrayList<>();
+                        // ArrayList<Archivo> archivos2List = new ArrayList<>();
+                        // ArrayList<Archivo>archivos3List = new ArrayList<>();
+                        String type = "";
+                        for (int i = 0; i < jsonArr.length(); i++) {
+                            JSONObject jsonObj = jsonArr.getJSONObject(i);
+                            //                System.out.println(jsonObj);
+                            // {"idFile":1, - int
+                            // "base64":"123456789", - string
+                            // "fileName":"ejemplo", - string
+                            // "fileExtension":".docx", - string si es url poner "URL"
+                            // "size":13 - int en kilobytes
+                            // }
+                            int idFile = jsonObj.getInt("idFile");
+                            type = jsonObj.getString("fileExtension");
+                            String base64 = jsonObj.getString("base64"); //if url this contains the link
+                            String fileName = jsonObj.getString("fileName");
+                            int size = jsonObj.getInt("size");
+                            Archivo file;
+                            if (type.equals("URL")) {
+                                file = new Archivo(idSubBatch, base64, idFile);
+                            } else {
+                                file = new Archivo(idSubBatch, base64, fileName);
+                            }
 
-        // TODO: conexión a la base de datos de Yireth y Andrey através de REST
-        // para validar el token, si es valido continua, sino error de autenticación
-        if (fakeToken.equals(token)) {
-            String idSubBatch = String.valueOf(new Date().getTime());
-            JSONArray jsonArr = new JSONArray(listJSON); //[{},{},{}]
-            ArrayList<Archivo> archivos1List = new ArrayList<Archivo>();
-//            ArrayList<Archivo> archivos2List = new ArrayList<Archivo>();
-//            ArrayList<Archivo>archivos3List = new ArrayList<Archivo>();
-            String type = "";
-            for (int i = 0; i < jsonArr.length(); i++) {
-                JSONObject jsonObj = jsonArr.getJSONObject(i);
-//                System.out.println(jsonObj);
-                // {"idFile":1, - int
-                // "base64":"123456789", - string
-                // "fileName":"ejemplo", - string
-                // "fileExtension":".docx", - string si es url poner "URL"
-                // "size":13 - int en kilobytes
-                // }
-                int idFile = jsonObj.getInt("idFile");
-                type = jsonObj.getString("fileExtension");
-                String base64 = jsonObj.getString("base64"); //if url this contains the link
-                String fileName = jsonObj.getString("fileName");
-                int size = jsonObj.getInt("size");
-                Archivo file;
-                if (type.equals("URL")) {
-                    file = new Archivo(idSubBatch, base64, idFile);
-                } else {
-                    file = new Archivo(idSubBatch, base64, fileName);
+                            archivos1List.add(file);
+                            // archivos2List.add(file);
+                            // archivos3List.add(file);
+
+                        }
+                        Archivo[] archivos1 = archivos1List.toArray(new Archivo[archivos1List.size()]);
+                        System.out.println("array");
+                        for (Archivo x : archivos1) {
+                            System.out.println(x.toString());
+                        }
+                        // Archivo[] archivos2 = archivos2List.toArray(new Archivo[archivos2List.size()]);
+                        // Archivo[] archivos3 = archivos3List.toArray(new Archivo[archivos3List.size()]);
+
+                        // todo: conectarse al servidor rest con un metodo de getUserIDByToken
+                        // hacerlo en una funición aparte que se pueda llamar en cualquier lugar
+                        // String userID = getUserIDByToken(token);
+                        String fakeid = "2";
+                        Sublote batch1 = new Sublote(idSubBatch, fakeid, archivos1);
+                        //            Sublote batch2 = new Sublote(idSubBatch, fakeid, archivos2);
+                        //            Sublote batch3 = new Sublote(idSubBatch, fakeid, archivos3);
+
+                        contratoRMI nodo1 = ProducingWebServiceApplication.nodo1;
+                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
+                        // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
+
+                        Sublote batchPDF1;
+                        Sublote batchPDF2;
+                        Sublote batchPDF3;
+                        if (type.equals("URL")) {
+                            batchPDF1 = nodo1.conversionURL(batch1);
+                            // batchPDF2 = nodo2.conversionURL(batch2);
+                            // batchPDF3 = nodo3.conversionURL(batch3);
+                        } else {
+                            batchPDF1 = nodo1.conversionOffice(batch1);
+                            // batchPDF2 = nodo2.conversionOffice(batch2);
+                            // batchPDF3 = nodo3.conversionOffice(batch3);
+                        }
+
+                        // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
+                        response.setSuccessful(true);
+                        response.setResponse("Archivos convertidos");
+                        response.setDownloadPath("Aquí estará el link de descarga");
+                    } else {
+                        response.setSuccessful(false);
+                        response.setResponse(response_str);
+                        response.setDownloadPath("");
+                    }
+                } catch (JSONException e) {
+                    try {
+                        JSONObject jsonRes = new JSONObject(res);
+                        response.setDownloadPath("");
+                        response.setSuccessful(false);
+                        response.setResponse(jsonRes.getString("error"));
+                    } catch (JSONException e2) {
+                        // in case of an unexpected error
+                        response.setDownloadPath("");
+                        response.setSuccessful(false);
+                        response.setResponse(e2.toString());
+                    }
                 }
-
-                archivos1List.add(file);
-//                archivos2List.add(file);
-//                archivos3List.add(file);
-
-            }
-            Archivo[] archivos1 = archivos1List.toArray(new Archivo[archivos1List.size()]);
-            System.out.println("array");
-            for (Archivo x: archivos1) {
-                System.out.println(x.toString());
-            }
-//            Archivo[] archivos2 = archivos2List.toArray(new Archivo[archivos2List.size()]);
-//            Archivo[] archivos3 = archivos3List.toArray(new Archivo[archivos3List.size()]);
-
-            Sublote batch1 = new Sublote(idSubBatch, fakeid, archivos1);
-//            Sublote batch2 = new Sublote(idSubBatch, fakeid, archivos2);
-//            Sublote batch3 = new Sublote(idSubBatch, fakeid, archivos3);
-
-            contratoRMI nodo1 = ProducingWebServiceApplication.nodo1;
-            contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
-            contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
-
-            if (type.equals("URL")) {
-                nodo1.conversionURL(batch1);
-//                nodo2.conversionURL(batch2);
-//                nodo3.conversionURL(batch3);
             } else {
-                nodo1.conversionOffice(batch1);
-//                nodo2.conversionOffice(batch2);
-//                nodo3.conversionOffice(batch3);
+                response.setDownloadPath("");
+                response.setSuccessful(false);
+                response.setResponse("Hubo un error al enviar los archivos");
             }
-
-            // todo: redirigir al metodo para descargar los archivos
-            response.setSuccessful(true);
-            response.setResponse("Archivos convertidos");
-        } else {
+        } catch (IOException e) {
+            response.setDownloadPath("");
             response.setSuccessful(false);
-            response.setResponse("Token inválido o expirado");
+            response.setResponse("Hubo un error al enviar los archivos: " + e.toString());
         }
         return response;
     }

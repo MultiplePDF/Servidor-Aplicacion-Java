@@ -11,13 +11,15 @@ public class RestConnect {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod(get_post);
 
-            if (!params.equals("")) {
+            if (get_post.equals("POST") && !params.equals("")) {
                 con.setRequestProperty("Content-Type", "application/json");
                 con.setDoOutput(true);
                 DataOutputStream out = new DataOutputStream(con.getOutputStream());
                 out.writeBytes(params);
                 out.flush();
                 out.close();
+            } else if (get_post.equals("GET") && !params.equals("")) {
+                con.setRequestProperty("Authorization", params);
             }
             InputStream is;
             if (con.getResponseCode() < 400) {

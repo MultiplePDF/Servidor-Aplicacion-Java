@@ -10,9 +10,6 @@ public class Sublote implements Serializable{
 	String idUsuario;
 	Archivo[] archivos;
 	
-	
-	
-	
 	public Sublote(String idSublote, String idUsuario, Archivo[] archivos) {
 		super();
 		this.idSublote = idSublote;
@@ -43,8 +40,12 @@ public class Sublote implements Serializable{
 
 	@Override
 	public String toString() {
-		return "com.example.SOAPwebservice.Sublote [idSublote=" + idSublote + ", idUsuario=" + idUsuario + ", archivos="
-				+ Arrays.toString(archivos) + "]";
+		return
+		"{\n" +
+		"	\"subBatchID\": \""+idSublote+"\",\n" +
+		"	\"userID\": \""+idUsuario+"\",\n" +
+		"	\"files\": " +Arrays.toString(archivos)+",\n" +
+		"}\n";
 	}
 	
 	

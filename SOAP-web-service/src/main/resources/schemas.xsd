@@ -116,6 +116,7 @@
     <xs:element name="sendBatchResponse">
         <xs:complexType>
             <xs:sequence>
+                <xs:element name="downloadPath" type="xs:string"/>
                 <xs:element name="response" type="xs:string"/>
                 <xs:element name="successful" type="xs:boolean"/>
             </xs:sequence>
