@@ -10,40 +10,133 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 
 @Endpoint
 public class FilesEndpoint {
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
     static final String fakeToken = "abc123";
-    //	Batch methods
+    static final String fakelist = "abc123";
+
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendBatchRequest")
     @ResponsePayload
-    public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) {
+    public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) throws JSONException, RemoteException {
+        // 1. obtener los datos de los clientes desde SOAP
         SendBatchResponse response = new SendBatchResponse();
-
         String listJSON = request.getListJSON();
         String token = request.getToken();
+        try {
+            // 2. conectarse al servidor de autenticación REST
+            RestConnect rest = new RestConnect();
+            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/validate", "GET", token);
+            if (!res.equals("")) {
+                try {
+                    JSONObject jsonRes = new JSONObject(res);
+                    String response_str = jsonRes.getString("message");
+                    if (response_str.equals("Bienvenido al sistema")) {
+                        // crear sublote para enviar al servidor RMI
+                        String idSubBatch = String.valueOf(new Date().getTime());
+                        JSONArray jsonArr = new JSONArray(listJSON); //[{},{},{}]
+                        ArrayList<File> archivos1List = new ArrayList<>();
+                        // ArrayList<Archivo> archivos2List = new ArrayList<>();
+                        // ArrayList<Archivo>archivos3List = new ArrayList<>();
+                        String type = "";
+                        for (int i = 0; i < jsonArr.length(); i++) {
+                            JSONObject jsonObj = jsonArr.getJSONObject(i);
+                            //                System.out.println(jsonObj);
+                            // {"idFile":1, - int
+                            // "base64":"123456789", - string
+                            // "fileName":"ejemplo", - string
+                            // "fileExtension":".docx", - string si es url poner "URL"
+                            // "size":13 - int en kilobytes
+                            // }
+                            int idFile = jsonObj.getInt("idFile");
+                            type = jsonObj.getString("fileExtension");
+                            String base64 = jsonObj.getString("base64"); //if url this contains the link
+                            String fileName = jsonObj.getString("fileName");
+                            int size = jsonObj.getInt("size");
+                            File file;
+                            if (type.equals("URL")) {
+                                file = new File(idSubBatch, base64, idFile);
+                            } else {
+                                file = new File(idSubBatch, base64, fileName);
+                            }
 
-        // TODO: conexión a la base de datos de Yireth y Andrey através de REST
-        // para validar el token, si es valido continua, sino error de autenticación
+                            archivos1List.add(file);
+                            // archivos2List.add(file);
+                            // archivos3List.add(file);
 
+                        }
+                        File[] archivos1 = archivos1List.toArray(new File[archivos1List.size()]);
+                        System.out.println("array");
+                        for (File x : archivos1) {
+                            System.out.println(x.toString());
+                        }
+                        // Archivo[] archivos2 = archivos2List.toArray(new Archivo[archivos2List.size()]);
+                        // Archivo[] archivos3 = archivos3List.toArray(new Archivo[archivos3List.size()]);
 
-        // TODO: CONEXION RMI
+                        // todo: conectarse al servidor rest con un metodo de getUserIDByToken
+                        // hacerlo en una funición aparte que se pueda llamar en cualquier lugar
+                        // String userID = getUserIDByToken(token);
+                        String fakeid = "2";
+                        SubBatch batch1 = new SubBatch(idSubBatch, fakeid, archivos1);
+                        //            Sublote batch2 = new Sublote(idSubBatch, fakeid, archivos2);
+                        //            Sublote batch3 = new Sublote(idSubBatch, fakeid, archivos3);
 
-        // pseudocodigo en comentarios
+                        InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
+                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
+                        // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
 
-	    if (fakeToken.equals(token)) {
-            // enviar a RMI
-            response.setSuccess("Files sent to conversion");
-            // todo: redirigir al metodo para descargar los archivos
-//            response.setSuccess("File not found");
-        }else{
-            response.setSuccess("You session expired, please log in again");
+                        SubBatch batchPDF1;
+                        SubBatch batchPDF2;
+                        SubBatch batchPDF3;
+                        if (type.equals("URL")) {
+                            batchPDF1 = nodo1.conversionURL(batch1);
+                            // batchPDF2 = nodo2.conversionURL(batch2);
+                            // batchPDF3 = nodo3.conversionURL(batch3);
+                        } else {
+                            batchPDF1 = nodo1.conversionOffice(batch1);
+                            // batchPDF2 = nodo2.conversionOffice(batch2);
+                            // batchPDF3 = nodo3.conversionOffice(batch3);
+                        }
+
+                        // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
+                        response.setSuccessful(true);
+                        response.setResponse("Archivos convertidos");
+                        response.setDownloadPath("Aquí estará el link de descarga");
+                    } else {
+                        response.setSuccessful(false);
+                        response.setResponse(response_str);
+                        response.setDownloadPath("");
+                    }
+                } catch (JSONException e) {
+                    try {
+                        JSONObject jsonRes = new JSONObject(res);
+                        response.setDownloadPath("");
+                        response.setSuccessful(false);
+                        response.setResponse(jsonRes.getString("error"));
+                    } catch (JSONException e2) {
+                        // in case of an unexpected error
+                        response.setDownloadPath("");
+                        response.setSuccessful(false);
+                        response.setResponse(e2.toString());
+                    }
+                }
+            } else {
+                response.setDownloadPath("");
+                response.setSuccessful(false);
+                response.setResponse("Hubo un error al enviar los archivos");
+            }
+        } catch (IOException e) {
+            response.setDownloadPath("");
+            response.setSuccessful(false);
+            response.setResponse("Hubo un error al enviar los archivos: " + e.toString());
         }
-
         return response;
     }
 
@@ -59,31 +152,30 @@ public class FilesEndpoint {
         // para validar el token, si es valido continua, sino error de autenticación
 
         if (fakeToken.equals(token)) {
-        RestConnect rest = new RestConnect();
-        try {
-            String res = rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=" + userID);
-            if (res.equals("")) {
-                response.setSuccess("Batch not found");
-            } else {
-                JSONArray jsonArr = new JSONArray(res);
-                JSONObject jsonObj = jsonArr.getJSONObject(0);
-                String dateCreated = jsonObj.getString("createdAt");
-                response.setDateCreated(dateCreated);
-                response.setFileQuantity(jsonObj.getInt("numeroArchivos"));
-                String vigencia = jsonObj.getString("vigencia");
-                // todo: do the substraction of dates (vigencia-dateCreated) and set it in setTimeExpiration
-                response.setTimeExpiration(vigencia);
+            RestConnect rest = new RestConnect();
+            try {
+                String res = rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=" + userID);
+                if (res.equals("")) {
+                    response.setResponse("Lote no encontrado");
+                    response.setSuccessful(false);
+                } else {
+                    JSONArray jsonArr = new JSONArray(res);
+                    JSONObject jsonObj = jsonArr.getJSONObject(0);
+                    String dateCreated = jsonObj.getString("createdAt");
+                    response.setDateCreated(dateCreated);
+                    response.setFileQuantity(jsonObj.getInt("numeroArchivos"));
+                    String vigencia = jsonObj.getString("vigencia");
+                    // todo: do the substraction of dates (vigencia-dateCreated) and set it in setTimeExpiration
+                    response.setTimeExpiration(vigencia);
+                }
+            } catch (JSONException | IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            response.setSuccess("An error occurred during connection to the server");
-            throw new RuntimeException(e);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
         } else {
 //         If the user is not authenticated, return an error message
-         response.setSuccess("You session expired, please log in again");
-	    }
+            response.setResponse("Token inválido o expirado");
+            response.setSuccessful(false);
+        }
         return response;
     }
 
