@@ -66,7 +66,7 @@
     <xs:element name="getUserDetailsRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="userID" type="xs:string"/>
+                <xs:element name="token" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -86,10 +86,9 @@
     <xs:element name="editUserDetailsRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="userID" type="xs:string"/>
+                <xs:element name="token" type="xs:string"/>
                 <xs:element name="name" type="xs:string"/>
                 <xs:element name="email" type="xs:string"/>
-                <xs:element name="password" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -103,8 +102,46 @@
         </xs:complexType>
     </xs:element>
 
+    <!--	change password	#6 -->
+    <xs:element name="changePasswordRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="oldPassword" type="xs:string"/>
+                <xs:element name="newPassword" type="xs:string"/>
+                <xs:element name="token" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="changePasswordResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+                <xs:element name="successful" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!--	validate token	#7 -->
+    <xs:element name="validateTokenRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="token" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="validateTokenResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+                <xs:element name="successful" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <!--	BATCH RELATED	-->
-    <!--	Send batch	#6 -->
+    <!--	Send batch	#A -->
     <xs:element name="sendBatchRequest">
         <xs:complexType>
             <xs:sequence>
@@ -124,7 +161,7 @@
         </xs:complexType>
     </xs:element>
 
-    <!--	Get batch details #7	-->
+    <!--	Get batch details #B	-->
     <xs:element name="getBatchDetailsRequest">
         <xs:complexType>
             <xs:sequence>

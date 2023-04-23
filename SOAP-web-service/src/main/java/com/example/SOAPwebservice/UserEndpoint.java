@@ -128,13 +128,13 @@ public class UserEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getUserDetailsRequest")
     @ResponsePayload
-    public GetUserDetailsResponse getUserDetails(@RequestPayload GetUserDetailsRequest request) {
+    public GetUserDetailsResponse getUserDetails(@RequestPayload GetUserDetailsRequest request) throws IOException {
         GetUserDetailsResponse response = new GetUserDetailsResponse();
 
-        String userID = request.getUserID();
-
-        // TODO: esperar que el servidor Rest lo tenga listo para implementar la conexión
-
+        String token = request.getToken();
+        RestConnect rest = new RestConnect();
+        String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/get-user-details", "GET", token);
+        // todo: estructurar resultado en el response
         response.setEmail("email resultado del fetch");
         response.setName("nombre resultado del fetch");
         response.setResponse("Ocurrió un error al obtener los detalles de usuario");
@@ -148,14 +148,14 @@ public class UserEndpoint {
         EditUserDetailsResponse response = new EditUserDetailsResponse();
 
         // TODO: esperar que el servidor Rest lo tenga listo para implementar la conexión
-        String userID = request.getUserID();
+        String token = request.getToken();
 
         String newName = request.getName();
         String newEmail = request.getEmail();
-        String newPass = request.getPassword();
 
         response.setResponse("Detalles del usuario editados correctamente");
         response.setSuccessful(true);
         return response;
     }
+
 }
