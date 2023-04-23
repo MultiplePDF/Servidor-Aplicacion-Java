@@ -9,6 +9,7 @@
                 <xs:element name="name" type="xs:string"/>
                 <xs:element name="email" type="xs:string"/>
                 <xs:element name="password" type="xs:string"/>
+                <xs:element name="confirm_password" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

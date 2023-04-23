@@ -22,13 +22,16 @@ public class UserEndpoint {
         String name = request.getName();
         String email = request.getEmail();
         String password = request.getPassword();
+        String confirmPassword = request.getConfirmPassword();
         try {
             RestConnect rest = new RestConnect();
-            String params = "nombre=" + name +
-                    "&email=" + email +
-                    "&password=" + password;
+            JSONObject params = new JSONObject();
+            params.put("name", name);
+            params.put("email", email);
+            params.put("password", password);
+            params.put("confirm_password", confirmPassword);
 
-            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/register", "POST", params);
+            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/register", "POST", params.toString());
             if (!res.equals("")) {
                 try {
                     JSONObject jsonObj = new JSONObject(res);
@@ -51,13 +54,17 @@ public class UserEndpoint {
                 }
             } else {
                 response.setToken("");
+                response.setSuccessful(false);
+                response.setResponse("There is no response from server");
             }
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             System.out.println(e);
+            response.setToken("");
+            response.setSuccessful(false);
+            response.setResponse(e.toString());
         }
         return response;
     }
-
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "loginRequest")
     @ResponsePayload
@@ -68,9 +75,10 @@ public class UserEndpoint {
 
         try {
             RestConnect rest = new RestConnect();
-            String params = "email=" + email +
-                    "&password=" + password;
-            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/login", "POST", params);
+            JSONObject params = new JSONObject();
+            params.put("email", email);
+            params.put("password", password);
+            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/login", "POST", params.toString());
             if (!res.equals("")) {
                 try {
                     JSONObject jsonObj = new JSONObject(res);
@@ -94,7 +102,7 @@ public class UserEndpoint {
             } else {
                 response.setToken("");
             }
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             System.out.println(e);
         }
 
