@@ -134,11 +134,38 @@ public class UserEndpoint {
         String token = request.getToken();
         RestConnect rest = new RestConnect();
         String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/get-user-details", "GET", token);
-        // todo: estructurar resultado en el response
-        response.setEmail("email resultado del fetch");
-        response.setName("nombre resultado del fetch");
-        response.setResponse("Ocurrió un error al obtener los detalles de usuario");
-        response.setSuccessful(false);
+        try {
+            JSONObject jsonObj = new JSONObject(res);
+            String name = jsonObj.getString("name");
+            String email = jsonObj.getString("email");
+            String userSince = jsonObj.getString("created_at");
+            String userEdited = jsonObj.getString("update_at");
+            response.setName(name);
+            response.setEmail(email);
+            response.setUserSince(userSince);
+            response.setUserEdited(userEdited);
+            response.setSuccessful(true);
+            response.setResponse("Success");
+        } catch (JSONException e) {
+            try {
+                JSONObject jsonObj = new JSONObject(res);
+                String error = jsonObj.getString("error");
+                response.setName("");
+                response.setEmail("");
+                response.setUserSince("");
+                response.setUserEdited("");
+                response.setSuccessful(false);
+                response.setResponse(error);
+            } catch (JSONException e2) {
+                // in case of an unexpected error
+                response.setName("");
+                response.setEmail("");
+                response.setUserSince("");
+                response.setUserEdited("");
+                response.setSuccessful(false);
+                response.setResponse(String.valueOf(e2));
+            }
+        }
         return response;
     }
 
@@ -159,3 +186,4 @@ public class UserEndpoint {
     }
 
 }
+

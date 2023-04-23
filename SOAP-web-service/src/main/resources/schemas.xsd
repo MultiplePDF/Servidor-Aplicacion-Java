@@ -76,6 +76,8 @@
             <xs:sequence>
                 <xs:element name="name" type="xs:string"/>
                 <xs:element name="email" type="xs:string"/>
+                <xs:element name="userSince" type="xs:string"/>
+                <xs:element name="userEdited" type="xs:string"/>
                 <xs:element name="response" type="xs:string"/>
                 <xs:element name="successful" type="xs:boolean"/>
             </xs:sequence>
