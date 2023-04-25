@@ -8,16 +8,34 @@ import java.util.List;
 public class DivideArray {
 
 //    public static void main(String[] args) {
-//        int[] nums = {100, 100, 100, 100, 100, 100, 100, 100, 100}; // Array de elementos enteros
-//        int k = 3; // Número de arrays en los que dividir
+//        File[] files = new File[6];
+//        files[0] = new File("1", "1", "archivo1");
+//        files[0].size = 100;
 //
-//        // Dividimos el array en k sub-arrays con la suma mínima
-//        List<List<Integer>> result = splitArray(nums);
+//        files[1] = new File("1", "1", "archivo2");
+//        files[1].size = 13;
 //
-//        // Mostramos los k sub-arrays con suma mínima
-//        for (List<Integer> arr : result) {
-//            System.out.println("Sub-array: " + arr);
+//        files[2] = new File("1", "1", "archivo3");
+//        files[2].size = 88;
+//
+//        files[3] = new File("1", "1", "archivo4");
+//        files[3].size = 91;
+//
+//        files[4] = new File("1", "1", "archivo5");
+//        files[4].size = 50;
+//
+//        files[5] = new File("1", "1", "archivo6");
+//        files[5].size = 72;
+//
+//
+//        SubBatch subBatch = new SubBatch("1","1",files);
+//        List<SubBatch> divided = splitArray(subBatch);
+//
+//        for (SubBatch subBatch1 : divided) {
+//            File[] files1 = subBatch1.files;
+//            System.out.println(Arrays.toString(files1));
 //        }
+//
 //    }
 
     public static List<SubBatch> splitArray(SubBatch subBatch) {
