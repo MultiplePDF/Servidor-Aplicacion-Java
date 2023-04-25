@@ -53,6 +53,12 @@ public class DivideArray {
             dividedSubBatch.get(minIndex).files[a[minIndex]++] = file;
         }
 
+        for (SubBatch batch : dividedSubBatch) {
+            File[] batchFiles = batch.files;
+            batchFiles = Arrays.stream(batchFiles).filter(s -> (s != null)).toArray(File[]::new);
+            batch.files = batchFiles;
+        }
+
         return dividedSubBatch;
     }
 
