@@ -33,6 +33,7 @@ public class File implements Serializable {
                 "        \"url\": \"" + url + "\",\n" +
                 "        \"base64\": \"" + base64 + "\",\n" +
                 "        \"fileName\": \"" + name + "\",\n" +
+                "        \"size\": " + size + "\n" +
                 "    }";
     }
 

@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Endpoint
 public class FilesEndpoint {
@@ -31,30 +33,27 @@ public class FilesEndpoint {
         String listJSON = request.getListJSON();
         String token = request.getToken();
         try {
-            // 2. conectarse al servidor de autenticación REST
-            RestConnect rest = new RestConnect();
-            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/validate", "GET", token);
+//             2. conectarse al servidor de autenticación REST
+            String res = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/validate", "GET", token);
             if (!res.equals("")) {
                 try {
                     JSONObject jsonRes = new JSONObject(res);
-                    String response_str = jsonRes.getString("message");
-                    if (response_str.equals("Bienvenido al sistema")) {
+                    boolean response_str = jsonRes.getBoolean("message");
+                    if (response_str) {
                         // crear sublote para enviar al servidor RMI
                         String idSubBatch = String.valueOf(new Date().getTime());
                         JSONArray jsonArr = new JSONArray(listJSON); //[{},{},{}]
-                        ArrayList<File> archivos1List = new ArrayList<>();
-                        // ArrayList<Archivo> archivos2List = new ArrayList<>();
-                        // ArrayList<Archivo>archivos3List = new ArrayList<>();
                         String type = "";
+                        ArrayList<File> archivosList = new ArrayList<>();
                         for (int i = 0; i < jsonArr.length(); i++) {
                             JSONObject jsonObj = jsonArr.getJSONObject(i);
                             //                System.out.println(jsonObj);
-                            // {"idFile":1, - int
-                            // "base64":"123456789", - string
-                            // "fileName":"ejemplo", - string
-                            // "fileExtension":".docx", - string si es url poner "URL"
-                            // "size":13 - int en kilobytes
-                            // }
+//                             {"idFile":1,
+//                             "base64":"123456789",
+//                             "fileName":"ejemplo",
+//                             "fileExtension":".docx",
+//                             "size":13
+//                             }
                             int idFile = jsonObj.getInt("idFile");
                             type = jsonObj.getString("fileExtension");
                             String base64 = jsonObj.getString("base64"); //if url this contains the link
@@ -63,38 +62,36 @@ public class FilesEndpoint {
                             File file;
                             if (type.equals("URL")) {
                                 file = new File(idSubBatch, base64, idFile);
+                                file.size = size;
                             } else {
                                 file = new File(idSubBatch, base64, fileName);
+                                file.size = size;
                             }
-
-                            archivos1List.add(file);
-                            // archivos2List.add(file);
-                            // archivos3List.add(file);
-
+                            archivosList.add(file);
                         }
-                        File[] archivos1 = archivos1List.toArray(new File[archivos1List.size()]);
-                        System.out.println("array");
-                        for (File x : archivos1) {
-                            System.out.println(x.toString());
-                        }
-                        // Archivo[] archivos2 = archivos2List.toArray(new Archivo[archivos2List.size()]);
-                        // Archivo[] archivos3 = archivos3List.toArray(new Archivo[archivos3List.size()]);
-
                         // todo: conectarse al servidor rest con un metodo de getUserIDByToken
-                        // hacerlo en una funición aparte que se pueda llamar en cualquier lugar
-                        // String userID = getUserIDByToken(token);
                         String fakeid = "2";
-                        SubBatch batch1 = new SubBatch(idSubBatch, fakeid, archivos1);
-                        //            Sublote batch2 = new Sublote(idSubBatch, fakeid, archivos2);
-                        //            Sublote batch3 = new Sublote(idSubBatch, fakeid, archivos3);
+                        File[] archivos = archivosList.toArray(new File[archivosList.size()]);
+                        SubBatch fullBatch = new SubBatch(idSubBatch, fakeid, archivos);
+                        System.out.println(Arrays.toString(archivos));
+                        List<SubBatch> subBatches = DivideArray.splitArray(fullBatch);
+                        SubBatch batch1 = subBatches.get(0);
+                        SubBatch batch2 = subBatches.get(1);
+                        SubBatch batch3 = subBatches.get(2);
 
+                        System.out.println("array");
+                        System.out.println(batch1.files.length);
+                        System.out.println(batch2.files.length);
+                        System.out.println(batch3.files.length);
+//
                         InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
-                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
-                        // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
-
+//                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
+//                        // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
+//
                         SubBatch batchPDF1;
                         SubBatch batchPDF2;
                         SubBatch batchPDF3;
+
                         if (type.equals("URL")) {
                             batchPDF1 = nodo1.conversionURL(batch1);
                             // batchPDF2 = nodo2.conversionURL(batch2);
@@ -111,7 +108,7 @@ public class FilesEndpoint {
                         response.setDownloadPath("Aquí estará el link de descarga");
                     } else {
                         response.setSuccessful(false);
-                        response.setResponse(response_str);
+                        response.setResponse(String.valueOf(response_str));
                         response.setDownloadPath("");
                     }
                 } catch (JSONException e) {
@@ -152,9 +149,8 @@ public class FilesEndpoint {
         // para validar el token, si es valido continua, sino error de autenticación
 
         if (fakeToken.equals(token)) {
-            RestConnect rest = new RestConnect();
             try {
-                String res = rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=" + userID);
+                String res = Rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=" + userID);
                 if (res.equals("")) {
                     response.setResponse("Lote no encontrado");
                     response.setSuccessful(false);

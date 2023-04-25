@@ -4,8 +4,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RestConnect {
-    public String connect(String route, String get_post, String params) throws IOException {
+public class Rest {
+    final static public String connect(String route, String get_post, String params) throws IOException {
         try {
             URL url = new URL(route);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();

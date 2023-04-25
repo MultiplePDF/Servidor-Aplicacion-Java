@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class LocalTesting {
 
@@ -13,7 +12,6 @@ public class LocalTesting {
     public static void main(String[] args) throws IOException, JSONException {
 
         // TEST CONNECTION TO REST SERVERS
-        RestConnect rest = new RestConnect();
 //        System.out.println(rest.connect("http://bd.bucaramanga.upb.edu.co:3000/","GET",""));
 //        String res = rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=2");
 //        System.out.println(res);
@@ -25,7 +23,7 @@ public class LocalTesting {
         cred.put("password", "123456789");
         cred.put("confirm_password", "123456789");
 
-        String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/register", "POST", cred.toString());
+        String res = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/register", "POST", cred.toString());
         System.out.println(res);
 
 

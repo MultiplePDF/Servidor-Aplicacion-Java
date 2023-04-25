@@ -7,46 +7,60 @@ import java.util.List;
 
 public class DivideArray {
 
-    public static void main(String[] args) {
-        int[] nums = {80,70,93,100,88,78}; // Array de elementos enteros
-        int k = 3; // Número de arrays en los que dividir
+//    public static void main(String[] args) {
+//        File[] files = new File[6];
+//        files[0] = new File("1", "1", "archivo1");
+//        files[0].size = 100;
+//
+//        files[1] = new File("1", "1", "archivo2");
+//        files[1].size = 13;
+//
+//        files[2] = new File("1", "1", "archivo3");
+//        files[2].size = 88;
+//
+//        files[3] = new File("1", "1", "archivo4");
+//        files[3].size = 91;
+//
+//        files[4] = new File("1", "1", "archivo5");
+//        files[4].size = 50;
+//
+//        files[5] = new File("1", "1", "archivo6");
+//        files[5].size = 72;
+//
+//
+//        SubBatch subBatch = new SubBatch("1","1",files);
+//        List<SubBatch> divided = splitArray(subBatch);
+//
+//        for (SubBatch subBatch1 : divided) {
+//            File[] files1 = subBatch1.files;
+//            System.out.println(Arrays.toString(files1));
+//        }
+//
+//    }
 
-        // Dividimos el array en k sub-arrays con la suma mínima
-        List<List<Integer>> result = splitArray(nums);
+    public static List<SubBatch> splitArray(SubBatch subBatch) {
+        File[] files = subBatch.files;
 
-        // Mostramos los k sub-arrays con suma mínima
-        for (List<Integer> arr : result) {
-            System.out.println("Sub-array: " + arr);
-        }
-    }
-
-    public static List<List<Integer>> splitArray(int[] nums) {
-        int n = nums.length;
+        int n = files.length;
         final int k = 3;
-        // Calculamos la suma total del array
-        int totalSum = 0;
-        for (int num : nums) {
-            totalSum += num;
-        }
-
-        // Calculamos el tamaño mínimo de cada sub-array
-        int targetSum = totalSum / k;
 
         // Creamos un array de k sub-arrays vacíos
-        List<List<Integer>> result = new ArrayList<>();
+        List<SubBatch> dividedSubBatch = new ArrayList<>();
         for (int i = 0; i < k; i++) {
-            result.add(new ArrayList<>());
+            SubBatch newSubBatch = new SubBatch(subBatch.subBatchID, subBatch.userID, new File[files.length]);
+            dividedSubBatch.add(newSubBatch);
         }
 
+        int[] a = new int[k];
         // Distribuimos los elementos del array en los sub-arrays
         for (int i = n - 1; i >= 0; i--) {
-            int num = nums[i];
+            File file = files[i];
 
             // Buscamos el sub-array con la suma más baja
             int minIndex = 0;
             int minSum = Integer.MAX_VALUE;
             for (int j = 0; j < k; j++) {
-                int sum = sum(result.get(j));
+                int sum = sum(dividedSubBatch.get(j).files);
                 if (sum < minSum) {
                     minSum = sum;
                     minIndex = j;
@@ -54,22 +68,24 @@ public class DivideArray {
             }
 
             // Agregamos el elemento al sub-array con la suma más baja
-            result.get(minIndex).add(num);
+            dividedSubBatch.get(minIndex).files[a[minIndex]++] = file;
         }
 
-        // Ordenamos los sub-arrays de menor a mayor
-        for (int i = 0; i < k; i++) {
-            Collections.sort(result.get(i));
+        for (SubBatch batch : dividedSubBatch) {
+            File[] batchFiles = batch.files;
+            batchFiles = Arrays.stream(batchFiles).filter(s -> (s != null)).toArray(File[]::new);
+            batch.files = batchFiles;
         }
 
-        return result;
+        return dividedSubBatch;
     }
 
-    public static int sum(List<Integer> arr) {
+    public static int sum(File[] files) {
         int total = 0;
-        for (int num : arr) {
-            total += num;
-        }
+        for (File file : files)
+            if (file != null)
+                total += file.size;
+
         return total;
     }
 }
