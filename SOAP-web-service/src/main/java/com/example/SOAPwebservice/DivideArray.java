@@ -65,7 +65,8 @@ public class DivideArray {
     public static int sum(File[] files) {
         int total = 0;
         for (File file : files)
-            total += file.size;
+            if (file != null)
+                total += file.size;
 
         return total;
     }
