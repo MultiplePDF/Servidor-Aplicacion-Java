@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -61,8 +62,10 @@ public class FilesEndpoint {
                             File file;
                             if (type.equals("URL")) {
                                 file = new File(idSubBatch, base64, idFile);
+                                file.size = size;
                             } else {
                                 file = new File(idSubBatch, base64, fileName);
+                                file.size = size;
                             }
                             archivosList.add(file);
                         }
@@ -70,6 +73,7 @@ public class FilesEndpoint {
                         String fakeid = "2";
                         File[] archivos = archivosList.toArray(new File[archivosList.size()]);
                         SubBatch fullBatch = new SubBatch(idSubBatch, fakeid, archivos);
+                        System.out.println(Arrays.toString(archivos));
                         List<SubBatch> subBatches = DivideArray.splitArray(fullBatch);
                         SubBatch batch1 = subBatches.get(0);
                         SubBatch batch2 = subBatches.get(1);
