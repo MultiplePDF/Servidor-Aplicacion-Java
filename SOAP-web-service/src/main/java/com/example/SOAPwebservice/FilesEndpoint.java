@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Endpoint
 public class FilesEndpoint {
@@ -42,10 +43,8 @@ public class FilesEndpoint {
                         // crear sublote para enviar al servidor RMI
                         String idSubBatch = String.valueOf(new Date().getTime());
                         JSONArray jsonArr = new JSONArray(listJSON); //[{},{},{}]
-                        ArrayList<File> archivos1List = new ArrayList<>();
-                        // ArrayList<Archivo> archivos2List = new ArrayList<>();
-                        // ArrayList<Archivo>archivos3List = new ArrayList<>();
                         String type = "";
+                        ArrayList<File> archivosList = new ArrayList<>();
                         for (int i = 0; i < jsonArr.length(); i++) {
                             JSONObject jsonObj = jsonArr.getJSONObject(i);
                             //                System.out.println(jsonObj);
@@ -66,44 +65,35 @@ public class FilesEndpoint {
                             } else {
                                 file = new File(idSubBatch, base64, fileName);
                             }
-
-                            archivos1List.add(file);
-                            // archivos2List.add(file);
-                            // archivos3List.add(file);
-
+                            archivosList.add(file);
                         }
-                        File[] archivos1 = archivos1List.toArray(new File[archivos1List.size()]);
-                        System.out.println("array");
-                        for (File x : archivos1) {
-                            System.out.println(x.toString());
-                        }
-                        // Archivo[] archivos2 = archivos2List.toArray(new Archivo[archivos2List.size()]);
-                        // Archivo[] archivos3 = archivos3List.toArray(new Archivo[archivos3List.size()]);
-
                         // todo: conectarse al servidor rest con un metodo de getUserIDByToken
-                        // hacerlo en una funición aparte que se pueda llamar en cualquier lugar
-                        // String userID = getUserIDByToken(token);
                         String fakeid = "2";
-                        SubBatch batch1 = new SubBatch(idSubBatch, fakeid, archivos1);
-                        //            Sublote batch2 = new Sublote(idSubBatch, fakeid, archivos2);
-                        //            Sublote batch3 = new Sublote(idSubBatch, fakeid, archivos3);
-
-                        InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
-                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
-                        // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
-
-                        SubBatch batchPDF1;
-                        SubBatch batchPDF2;
-                        SubBatch batchPDF3;
-                        if (type.equals("URL")) {
-                            batchPDF1 = nodo1.conversionURL(batch1);
-                            // batchPDF2 = nodo2.conversionURL(batch2);
-                            // batchPDF3 = nodo3.conversionURL(batch3);
-                        } else {
-                            batchPDF1 = nodo1.conversionOffice(batch1);
-                            // batchPDF2 = nodo2.conversionOffice(batch2);
-                            // batchPDF3 = nodo3.conversionOffice(batch3);
-                        }
+                        File[] archivos = archivosList.toArray(new File[archivosList.size()]);
+                        SubBatch fullBatch = new SubBatch(idSubBatch, fakeid, archivos);
+//                        List<SubBatch> subBatches = DivideArray.splitArray(fullBatch);
+//                        SubBatch batch1 = subBatches.get(0);
+//                        SubBatch batch2 = subBatches.get(0);
+//                        SubBatch batch3 = subBatches.get(0);
+//                        System.out.println("array");
+//
+//                        InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
+//                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
+//                        // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
+//
+//                        SubBatch batchPDF1;
+//                        SubBatch batchPDF2;
+//                        SubBatch batchPDF3;
+//
+//                        if (type.equals("URL")) {
+//                            batchPDF1 = nodo1.conversionURL(batch1);
+//                            // batchPDF2 = nodo2.conversionURL(batch2);
+//                            // batchPDF3 = nodo3.conversionURL(batch3);
+//                        } else {
+//                            batchPDF1 = nodo1.conversionOffice(batch1);
+//                            // batchPDF2 = nodo2.conversionOffice(batch2);
+//                            // batchPDF3 = nodo3.conversionOffice(batch3);
+//                        }
 
                         // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
                         response.setSuccessful(true);
