@@ -1,7 +1,6 @@
 package com.example.SOAPwebservice;
 
 import io.spring.guides.gs_producing_web_service.*;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -17,52 +16,46 @@ public class UserEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "registerRequest")
     @ResponsePayload
-    public RegisterResponse register(@RequestPayload RegisterRequest request) {
+    public RegisterResponse register(@RequestPayload RegisterRequest request) throws IOException, JSONException {
         RegisterResponse response = new RegisterResponse();
         String name = request.getName();
         String email = request.getEmail();
         String password = request.getPassword();
         String confirmPassword = request.getConfirmPassword();
-        try {
-            RestConnect rest = new RestConnect();
-            JSONObject params = new JSONObject();
-            params.put("name", name);
-            params.put("email", email);
-            params.put("password", password);
-            params.put("confirm_password", confirmPassword);
 
-            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/register", "POST", params.toString());
-            if (!res.equals("")) {
+        JSONObject params = new JSONObject();
+        params.put("name", name);
+        params.put("email", email);
+        params.put("password", password);
+        params.put("confirm_password", confirmPassword);
+
+        String res = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/register", "POST", params.toString());
+        if (!res.equals("")) {
+            try {
+                JSONObject jsonObj = new JSONObject(res);
+                String token = jsonObj.getString("token");
+                response.setToken(token);
+                response.setSuccessful(true);
+                response.setResponse("Success");
+            } catch (JSONException e) {
                 try {
                     JSONObject jsonObj = new JSONObject(res);
-                    String token = jsonObj.getString("token");
-                    response.setToken(token);
-                    response.setSuccessful(true);
-                    response.setResponse("Success");
-                } catch (JSONException e) {
-                    try {
-                        JSONObject jsonObj = new JSONObject(res);
-                        response.setToken("");
-                        response.setSuccessful(false);
-                        response.setResponse(jsonObj.getString("error"));
-                    } catch (JSONException e2) {
-                        // in case of an unexpected error
-                        response.setToken("");
-                        response.setSuccessful(false);
-                        response.setResponse(e2.toString());
-                    }
+                    response.setToken("");
+                    response.setSuccessful(false);
+                    response.setResponse(jsonObj.getString("error"));
+                } catch (JSONException e2) {
+                    // in case of an unexpected error
+                    response.setToken("");
+                    response.setSuccessful(false);
+                    response.setResponse(e2.toString());
                 }
-            } else {
-                response.setToken("");
-                response.setSuccessful(false);
-                response.setResponse("There is no response from server");
             }
-        } catch (IOException | JSONException e) {
-            System.out.println(e);
+        } else {
             response.setToken("");
             response.setSuccessful(false);
-            response.setResponse(e.toString());
+            response.setResponse("There is no response from server");
         }
+
         return response;
     }
 
@@ -74,11 +67,10 @@ public class UserEndpoint {
         String password = request.getPassword();
 
         try {
-            RestConnect rest = new RestConnect();
             JSONObject params = new JSONObject();
             params.put("email", email);
             params.put("password", password);
-            String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/login", "POST", params.toString());
+            String res = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/login", "POST", params.toString());
             if (!res.equals("")) {
                 try {
                     JSONObject jsonObj = new JSONObject(res);
@@ -132,8 +124,7 @@ public class UserEndpoint {
         GetUserDetailsResponse response = new GetUserDetailsResponse();
 
         String token = request.getToken();
-        RestConnect rest = new RestConnect();
-        String res = rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/get-user-details", "GET", token);
+        String res = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/get-user-details", "GET", token);
         try {
             JSONObject jsonObj = new JSONObject(res);
             String name = jsonObj.getString("name");
