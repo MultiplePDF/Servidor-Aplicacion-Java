@@ -137,39 +137,87 @@ public class FilesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBatchDetailsRequest")
     @ResponsePayload
-    public GetBatchDetailsResponse getBatchDetails(@RequestPayload GetBatchDetailsRequest request) {
+    public GetBatchDetailsResponse getBatchDetails(@RequestPayload GetBatchDetailsRequest request) throws JSONException, IOException {
         GetBatchDetailsResponse response = new GetBatchDetailsResponse();
+        // response build if an error occurred
+        response.setDateCreated("");
+        response.setFileQuantity(0);
+        response.setPath("");
+        response.setTimeExpiration("");
+        response.setState(false);
+        response.setResponse("");
+        response.setSuccessful(false);
 
-        String userID = request.getUserID();
         String token = request.getToken();
-
-        // TODO: conexión a la base de datos de Yireth y Andrey através de REST
-        // para validar el token, si es valido continua, sino error de autenticación
-
-        if (fakeToken.equals(token)) {
+        String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/get-userid", "GET", token);
+        try {
+            JSONObject jsonResUser = new JSONObject(resUserID);
+            String userID = jsonResUser.getString("id_user");
+            JSONObject params = new JSONObject();
+            params.put("userId", userID);
             try {
-                String res = Rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=" + userID);
+                    /*[
+                    {
+                        "files": [
+                        {
+                            "fileName": "arepa",
+                                "size": 42,
+                                "filePath": "ruta en rust"
+                        },
+                        {
+                            "fileName": "empanada",
+                                "size": 13,
+                                "filePath": "ruta en rust"
+                        }
+                        ],
+                        "_id": "644973588753a2a164f97d9d",
+                        "userId": "085819fd9161976b7461ccecf20a7885",
+                        "numberFiles": 2,
+                        "batchPath": "C:\\Users\\Henry\\Documents\\GitHub",
+                        "validity": "2023-03-30T00:00:00.000Z",
+                        "status": true,
+                        "createdAt": "2023-04-26T18:54:16.527Z",
+                        "updatedAt": "2023-04-26T18:54:16.527Z"
+                    }
+                    ]*/
+                String res = Rest.connect("http://bd.bucaramanga.upb.edu.co:3000/batch/callBatches", "POST", params.toString());
                 if (res.equals("")) {
                     response.setResponse("Lote no encontrado");
                     response.setSuccessful(false);
                 } else {
+                    // todo: falta verificar que el res de esto:
+                        /*
+                        {
+                            "message": "No existe lotes para este usuario"
+                        }
+                        */
                     JSONArray jsonArr = new JSONArray(res);
                     JSONObject jsonObj = jsonArr.getJSONObject(0);
-                    String dateCreated = jsonObj.getString("createdAt");
-                    response.setDateCreated(dateCreated);
-                    response.setFileQuantity(jsonObj.getInt("numeroArchivos"));
-                    String vigencia = jsonObj.getString("vigencia");
-                    // todo: do the substraction of dates (vigencia-dateCreated) and set it in setTimeExpiration
-                    response.setTimeExpiration(vigencia);
+                    response.setDateCreated(jsonObj.getString("createdAt"));
+                    response.setFileQuantity(jsonObj.getInt("numberFiles"));
+                    response.setPath(jsonObj.getString("batchPath"));
+                    response.setTimeExpiration(jsonObj.getString("validity"));
+                    response.setState(jsonObj.getBoolean("status"));
+                    response.setResponse("Se obtuvo el lote de archivos correctamente");
+                    response.setSuccessful(true);
+
                 }
             } catch (JSONException | IOException e) {
                 throw new RuntimeException(e);
             }
-        } else {
-//         If the user is not authenticated, return an error message
-            response.setResponse("Token inválido o expirado");
-            response.setSuccessful(false);
+
+        } catch (JSONException e) {
+            try {
+                JSONObject jsonRes = new JSONObject(resUserID);
+                response.setSuccessful(false);
+                response.setResponse(jsonRes.getString("error"));
+            } catch (JSONException e2) {
+                // in case of an unexpected error
+                response.setSuccessful(false);
+                response.setResponse(e2.toString());
+            }
         }
+
         return response;
     }
 
