@@ -7,6 +7,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 @SpringBootApplication
 public class ProducingWebServiceApplication {
@@ -15,14 +17,16 @@ public class ProducingWebServiceApplication {
 	public static InterfaceRMI nodo3;
 
 
-	public static void main(String[] args) throws MalformedURLException, NotBoundException, RemoteException {
+	public static void main(String[] args) {
 		SpringApplication.run(ProducingWebServiceApplication.class, args);
 		try {
-			nodo1 = (InterfaceRMI) Naming.lookup("rmi://nodo1.bucaramanga.upb.edu.co:1099/convertidor");
-//			nodo2 = (contratoRMI) Naming.lookup("rmi://nodo2.bucaramanga.upb.edu.co:1099/convertidor");
-//			nodo3 = (contratoRMI) Naming.lookup("rmi://nodo3.bucaramanga.upb.edu.co:1099/convertidor");
+//			nodo1 = (InterfaceRMI) Naming.lookup("rmi://nodo1.bucaramanga.upb.edu.co:1099/convertidor");
+			Registry registry = LocateRegistry.getRegistry("nodo1.bucaramanga.upb.edu.co", 1099);
+			nodo1 = (InterfaceRMI) registry.lookup("convertidor");
+//			nodo2 = (InterfaceRMI) Naming.lookup("rmi://nodo2.bucaramanga.upb.edu.co:1099/convertidor");
+//			nodo3 = (InterfaceRMI) Naming.lookup("rmi://nodo3.bucaramanga.upb.edu.co:1099/convertidor");
 	
-		} catch (NotBoundException | MalformedURLException | RemoteException e) {
+		} catch (NotBoundException | RemoteException e) {
 			System.out.println("Can't connect to RMI server");
 			System.out.println(e);
 		}
