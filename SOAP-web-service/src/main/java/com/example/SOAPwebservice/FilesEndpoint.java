@@ -47,7 +47,6 @@ public class FilesEndpoint {
                         ArrayList<File> archivosList = new ArrayList<>();
                         for (int i = 0; i < jsonArr.length(); i++) {
                             JSONObject jsonObj = jsonArr.getJSONObject(i);
-                            //                System.out.println(jsonObj);
 //                             {"idFile":1,
 //                             "base64":"123456789",
 //                             "fileName":"ejemplo",
@@ -66,28 +65,23 @@ public class FilesEndpoint {
                             if (type.equals("URL")) {
                                 file = new File(idSubBatch, base64, idFile);
                             } else {
-                                System.out.println("aqui1");
                                 file = new File(idSubBatch, base64, fileName, checksum);
-                                System.out.println("aqui2");
                             }
-                            System.out.println("aqui3");
                             file.size = size;
                             archivosList.add(file);
-                            System.out.println(file.toString());
                         }
                         // todo: conectarse al servidor rest con un metodo de getUserIDByToken
 //                        String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/", "GET", token);
                         String fakeUserid = "2";
                         File[] archivos = archivosList.toArray(new File[archivosList.size()]);
                         SubBatch fullBatch = new SubBatch(idSubBatch, fakeUserid, archivos);
-                        System.out.println("BATCH COMPLETO");
+                        System.out.println("\n------------------------ FULL BATCH ------------------------\n");
                         System.out.println(fullBatch);
+                        System.out.println();
                         List<SubBatch> subBatches = DivideArray.splitArray(fullBatch);
                         SubBatch batch1 = subBatches.get(0);
                         SubBatch batch2 = subBatches.get(1);
                         SubBatch batch3 = subBatches.get(2);
-                        System.out.println("SUB BATCH 1");
-                        System.out.println(batch1);
 
                         InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
 //                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
@@ -96,6 +90,7 @@ public class FilesEndpoint {
                         SubBatch batchPDF1;
                         SubBatch batchPDF2;
                         SubBatch batchPDF3;
+                        System.out.println("Archivos enviados a conversión...");
                         if (type.equals("URL")) {
                             batchPDF1 = nodo1.conversionURL(batch1);
                             // batchPDF2 = nodo2.conversionURL(batch2);
@@ -105,7 +100,7 @@ public class FilesEndpoint {
                             // batchPDF2 = nodo2.conversionOffice(batch2);
                             // batchPDF3 = nodo3.conversionOffice(batch3);
                         }
-                        System.out.println("Holaaaaaaaaaaaaaaaaaa");
+                        System.out.println("\nArchivos convertidos");
                         System.out.println();
                         System.out.println(Arrays.toString(batchPDF1.files));
                         // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
