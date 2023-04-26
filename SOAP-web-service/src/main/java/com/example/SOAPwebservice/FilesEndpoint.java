@@ -148,12 +148,8 @@ public class FilesEndpoint {
         String token = request.getToken();
         String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/get-userid", "GET", token);
         try {
-            System.out.println(resUserID);
             JSONObject jsonResUser = new JSONObject(resUserID);
-            System.out.println(jsonResUser);
-
             String userID = jsonResUser.getString("id_user");
-            System.out.println(userID);
             JSONObject params = new JSONObject();
             params.put("userId", userID);
             try {
