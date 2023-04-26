@@ -75,7 +75,7 @@ public class FilesEndpoint {
                         String fakeUserid = "2";
                         File[] archivos = archivosList.toArray(new File[archivosList.size()]);
                         SubBatch fullBatch = new SubBatch(idSubBatch, fakeUserid, archivos);
-                        List<SubBatch> subBatches = DivideArray.splitArray(fullBatch);
+                        List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch);
                         SubBatch batch1 = subBatches.get(0);
                         SubBatch batch2 = subBatches.get(1);
                         SubBatch batch3 = subBatches.get(2);
