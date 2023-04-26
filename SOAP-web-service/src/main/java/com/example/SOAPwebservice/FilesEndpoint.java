@@ -52,46 +52,41 @@ public class FilesEndpoint {
 //                             "base64":"123456789",
 //                             "fileName":"ejemplo",
 //                             "fileExtension":".docx",
-//                             "size":13
+//                             "size":13,
+//                             "checksum":"aaa"
 //                             }
                             int idFile = jsonObj.getInt("idFile");
                             type = jsonObj.getString("fileExtension");
                             String base64 = jsonObj.getString("base64"); //if url this contains the link
                             String fileName = jsonObj.getString("fileName");
                             int size = jsonObj.getInt("size");
+                            String checksum = jsonObj.getString("checksum");
                             File file;
                             if (type.equals("URL")) {
                                 file = new File(idSubBatch, base64, idFile);
-                                file.size = size;
                             } else {
-                                file = new File(idSubBatch, base64, fileName);
-                                file.size = size;
+                                file = new File(idSubBatch, base64, fileName, checksum);
                             }
+                            file.size = size;
                             archivosList.add(file);
                         }
                         // todo: conectarse al servidor rest con un metodo de getUserIDByToken
-                        String fakeid = "2";
+//                        String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/", "GET", token);
+                        String fakeUserid = "2";
                         File[] archivos = archivosList.toArray(new File[archivosList.size()]);
-                        SubBatch fullBatch = new SubBatch(idSubBatch, fakeid, archivos);
-                        System.out.println(Arrays.toString(archivos));
+                        SubBatch fullBatch = new SubBatch(idSubBatch, fakeUserid, archivos);
                         List<SubBatch> subBatches = DivideArray.splitArray(fullBatch);
                         SubBatch batch1 = subBatches.get(0);
                         SubBatch batch2 = subBatches.get(1);
                         SubBatch batch3 = subBatches.get(2);
 
-                        System.out.println("array");
-                        System.out.println(batch1.files.length);
-                        System.out.println(batch2.files.length);
-                        System.out.println(batch3.files.length);
-//
                         InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
 //                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
 //                        // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
-//
+
                         SubBatch batchPDF1;
                         SubBatch batchPDF2;
                         SubBatch batchPDF3;
-
                         if (type.equals("URL")) {
                             batchPDF1 = nodo1.conversionURL(batch1);
                             // batchPDF2 = nodo2.conversionURL(batch2);
@@ -101,8 +96,8 @@ public class FilesEndpoint {
                             // batchPDF2 = nodo2.conversionOffice(batch2);
                             // batchPDF3 = nodo3.conversionOffice(batch3);
                         }
-
                         // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
+//                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/","POST","");
                         response.setSuccessful(true);
                         response.setResponse("Archivos convertidos");
                         response.setDownloadPath("Aquí estará el link de descarga");
