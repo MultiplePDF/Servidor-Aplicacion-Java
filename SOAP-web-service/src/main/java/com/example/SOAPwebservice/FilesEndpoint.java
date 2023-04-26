@@ -177,19 +177,4 @@ public class FilesEndpoint {
         return response;
     }
 
-    private String timeFormatter(LocalDateTime time) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        return dtf.format(time);
-    }
-
-    private String timeSubtract(LocalDateTime time) {
-        LocalDateTime now = LocalDateTime.now();
-        String days = String.valueOf(ChronoUnit.DAYS.between(now, time));
-        String hours = String.valueOf(ChronoUnit.HOURS.between(now, time));
-        String minutes = String.valueOf(ChronoUnit.MINUTES.between(now, time));
-        return days + " days, " + hours + " hours, " + minutes + " minutes.";
-
-    }
-
-
 }
