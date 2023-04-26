@@ -66,10 +66,14 @@ public class FilesEndpoint {
                             if (type.equals("URL")) {
                                 file = new File(idSubBatch, base64, idFile);
                             } else {
+                                System.out.println("aqui1");
                                 file = new File(idSubBatch, base64, fileName, checksum);
+                                System.out.println("aqui2");
                             }
+                            System.out.println("aqui3");
                             file.size = size;
                             archivosList.add(file);
+                            System.out.println(file.toString());
                         }
                         // todo: conectarse al servidor rest con un metodo de getUserIDByToken
 //                        String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/", "GET", token);
