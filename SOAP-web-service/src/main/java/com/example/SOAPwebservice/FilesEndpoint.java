@@ -136,23 +136,18 @@ public class FilesEndpoint {
     @ResponsePayload
     public GetBatchDetailsResponse getBatchDetails(@RequestPayload GetBatchDetailsRequest request) throws JSONException, IOException {
         GetBatchDetailsResponse response = new GetBatchDetailsResponse();
-        // response build if an error occurred
-        response.setDateCreated("");
-        response.setFileQuantity(0);
-        response.setPath("");
-        response.setTimeExpiration("");
-        response.setState(false);
-        response.setResponse("");
         response.setSuccessful(false);
+        response.setBatchesList("[]");
+        response.setResponse("Ocurrió un error");
 
         String token = request.getToken();
         String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/get-userid", "GET", token);
-        try {
-            JSONObject jsonResUser = new JSONObject(resUserID);
+        JSONObject jsonResUser = new JSONObject(resUserID);
+
+        if (jsonResUser.has("id_user")) {
             String userID = jsonResUser.getString("id_user");
             JSONObject params = new JSONObject();
             params.put("userId", userID);
-            try {
                     /*[
                     {
                         "files": [
@@ -177,42 +172,16 @@ public class FilesEndpoint {
                         "updatedAt": "2023-04-26T18:54:16.527Z"
                     }
                     ]*/
-                String res = Rest.connect("http://bd.bucaramanga.upb.edu.co:3000/batch/callBatches", "POST", params.toString());
-                if (res.equals("")) {
-                    response.setResponse("Lote no encontrado");
-                    response.setSuccessful(false);
-                } else {
-                    // todo: falta verificar que el res de esto:
-                        /*
-                        {
-                            "message": "No existe lotes para este usuario"
-                        }
-                        */
-                    JSONArray jsonArr = new JSONArray(res);
-                    JSONObject jsonObj = jsonArr.getJSONObject(0);
-                    response.setDateCreated(jsonObj.getString("createdAt"));
-                    response.setFileQuantity(jsonObj.getInt("numberFiles"));
-                    response.setPath(jsonObj.getString("batchPath"));
-                    response.setTimeExpiration(jsonObj.getString("validity"));
-                    response.setState(jsonObj.getBoolean("status"));
-                    response.setResponse("Se obtuvo el lote de archivos correctamente");
-                    response.setSuccessful(true);
-
-                }
-            } catch (JSONException | IOException e) {
-                throw new RuntimeException(e);
+            String res = Rest.connect("http://bd.bucaramanga.upb.edu.co:3000/batch/callBatches", "POST", params.toString());
+            if (!res.equals("")) {
+                response.setSuccessful(true);
+                response.setBatchesList(res);
+                response.setResponse("Se obtuvieron los lotes de archivos correctamente");
             }
 
-        } catch (JSONException e) {
-            try {
-                JSONObject jsonRes = new JSONObject(resUserID);
-                response.setSuccessful(false);
-                response.setResponse(jsonRes.getString("error"));
-            } catch (JSONException e2) {
-                // in case of an unexpected error
-                response.setSuccessful(false);
-                response.setResponse(e2.toString());
-            }
+        } else if (jsonResUser.has("error")) {
+            String error = jsonResUser.getString("error");
+            response.setResponse(error);
         }
 
         return response;
