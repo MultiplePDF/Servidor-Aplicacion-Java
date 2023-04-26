@@ -75,10 +75,14 @@ public class FilesEndpoint {
                         String fakeUserid = "2";
                         File[] archivos = archivosList.toArray(new File[archivosList.size()]);
                         SubBatch fullBatch = new SubBatch(idSubBatch, fakeUserid, archivos);
+                        System.out.println("BATCH COMPLETO");
+                        System.out.println(fullBatch);
                         List<SubBatch> subBatches = DivideArray.splitArray(fullBatch);
                         SubBatch batch1 = subBatches.get(0);
                         SubBatch batch2 = subBatches.get(1);
                         SubBatch batch3 = subBatches.get(2);
+                        System.out.println("SUB BATCH 1");
+                        System.out.println(batch1);
 
                         InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
 //                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
