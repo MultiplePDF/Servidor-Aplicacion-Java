@@ -7,36 +7,36 @@ import java.util.List;
 
 public class DivideArray {
 
-//    public static void main(String[] args) {
-//        File[] files = new File[6];
-//        files[0] = new File("1", "1", "archivo1");
-//        files[0].size = 100;
-//
-//        files[1] = new File("1", "1", "archivo2");
-//        files[1].size = 13;
-//
-//        files[2] = new File("1", "1", "archivo3");
-//        files[2].size = 88;
-//
-//        files[3] = new File("1", "1", "archivo4");
-//        files[3].size = 91;
-//
-//        files[4] = new File("1", "1", "archivo5");
-//        files[4].size = 50;
-//
-//        files[5] = new File("1", "1", "archivo6");
-//        files[5].size = 72;
-//
-//
-//        SubBatch subBatch = new SubBatch("1","1",files);
-//        List<SubBatch> divided = splitArray(subBatch);
-//
-//        for (SubBatch subBatch1 : divided) {
-//            File[] files1 = subBatch1.files;
-//            System.out.println(Arrays.toString(files1));
-//        }
-//
-//    }
+    public static void main(String[] args) {
+        File[] files = new File[6];
+        files[0] = new File("1", "1",1);
+        files[0].size = 100;
+
+        files[1] = new File("1", "1", 2);
+        files[1].size = 13;
+
+        files[2] = new File("1", "1", 3);
+        files[2].size = 88;
+
+        files[3] = new File("1", "1", 4);
+        files[3].size = 91;
+
+        files[4] = new File("1", "1", 5);
+        files[4].size = 50;
+
+        files[5] = new File("1", "1", 6);
+        files[5].size = 72;
+
+
+        SubBatch subBatch = new SubBatch("1","1",files);
+        List<SubBatch> divided = splitArray(subBatch);
+
+        for (SubBatch subBatch1 : divided) {
+            File[] files1 = subBatch1.files;
+            System.out.println(Arrays.toString(files1));
+        }
+
+    }
 
     public static List<SubBatch> splitArray(SubBatch subBatch) {
         File[] files = subBatch.files;

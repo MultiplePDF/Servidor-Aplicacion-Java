@@ -9,13 +9,15 @@ public class File implements Serializable {
     String url;
     String base64;
     String name;
+    String checksum;
     int size;
 
-    public File(String idSubLote, String base64, String name) {
+    public File(String idSubLote, String base64, String name, String checksum) {
 
         this.subBatchID = idSubLote;
         this.base64 = base64;
         this.name = name;
+        this.checksum = checksum;
     }
 
     public File(String subBatchID, String url, int fileID) {
@@ -23,6 +25,7 @@ public class File implements Serializable {
         this.subBatchID = subBatchID;
         this.url = url;
         this.fileID = fileID;
+       
     }
 
     @Override
@@ -33,7 +36,8 @@ public class File implements Serializable {
                 "        \"url\": \"" + url + "\",\n" +
                 "        \"base64\": \"" + base64 + "\",\n" +
                 "        \"fileName\": \"" + name + "\",\n" +
-                "        \"size\": " + size + "\n" +
+                "        \"size\": " + size + ",\n" +
+                "        \"checksum\": \"" + checksum + "\",\n" +
                 "    }";
     }
 
