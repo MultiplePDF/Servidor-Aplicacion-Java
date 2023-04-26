@@ -27,26 +27,28 @@ public class FilesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "sendBatchRequest")
     @ResponsePayload
-    public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) throws JSONException, RemoteException {
-        // 1. obtener los datos de los clientes desde SOAP
+    public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) throws JSONException, IOException {
         SendBatchResponse response = new SendBatchResponse();
+        response.setDownloadPath("");
+        response.setSuccessful(false);
+        response.setResponse("Ocurrio un error");
+
         String listJSON = request.getListJSON();
         String token = request.getToken();
-        try {
-//             2. conectarse al servidor de autenticación REST
-            String res = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/validate", "GET", token);
-            if (!res.equals("")) {
-                try {
-                    JSONObject jsonRes = new JSONObject(res);
-                    boolean response_str = jsonRes.getBoolean("message");
-                    if (response_str) {
-                        // crear sublote para enviar al servidor RMI
-                        String idSubBatch = String.valueOf(new Date().getTime());
-                        JSONArray jsonArr = new JSONArray(listJSON); //[{},{},{}]
-                        String type = "";
-                        ArrayList<File> archivosList = new ArrayList<>();
-                        for (int i = 0; i < jsonArr.length(); i++) {
-                            JSONObject jsonObj = jsonArr.getJSONObject(i);
+        String res = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/validate", "GET", token);
+
+        if (res != null) {
+            JSONObject jsonRes = new JSONObject(res);
+            if (jsonRes.has("message")) {
+                boolean response_str = jsonRes.getBoolean("message");
+                if (response_str) {
+                    // crear sublote para enviar al servidor RMI
+                    String idSubBatch = String.valueOf(new Date().getTime());
+                    JSONArray jsonArr = new JSONArray(listJSON); //[{},{},{}]
+                    String type = "";
+                    ArrayList<File> archivosList = new ArrayList<>();
+                    for (int i = 0; i < jsonArr.length(); i++) {
+                        JSONObject jsonObj = jsonArr.getJSONObject(i);
 //                             {"idFile":1,
 //                             "base64":"123456789",
 //                             "fileName":"ejemplo",
@@ -54,92 +56,71 @@ public class FilesEndpoint {
 //                             "size":13,
 //                             "checksum":"aaa"
 //                             }
-                            int idFile = jsonObj.getInt("idFile");
-                            type = jsonObj.getString("fileExtension");
-                            String base64 = jsonObj.getString("base64"); //if url this contains the link
-                            String fileName = jsonObj.getString("fileName");
-                            fileName += type;
-                            int size = jsonObj.getInt("size");
-                            String checksum = jsonObj.getString("checksum");
-                            File file;
-                            if (type.equals("URL")) {
-                                file = new File(idSubBatch, base64, idFile);
-                            } else {
-                                file = new File(idSubBatch, base64, fileName, checksum);
-                            }
-                            file.size = size;
-                            archivosList.add(file);
+                        int idFile = jsonObj.getInt("idFile");
+                        type = jsonObj.getString("fileExtension");
+                        String base64 = jsonObj.getString("base64"); //if url this contains the link
+                        String fileName = jsonObj.getString("fileName");
+                        fileName += type;
+                        int size = jsonObj.getInt("size");
+                        String checksum = jsonObj.getString("checksum");
+                        File file;
+                        if (type.equals("URL")) {
+                            file = new File(idSubBatch, base64, idFile);
+                        } else {
+                            file = new File(idSubBatch, base64, fileName, checksum);
                         }
-                        // todo: conectarse al servidor rest con un metodo de getUserIDByToken
+                        file.size = size;
+                        archivosList.add(file);
+                    }
+                    // todo: conectarse al servidor rest con un metodo de getUserIDByToken
 //                        String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/", "GET", token);
-                        String fakeUserid = "2";
-                        File[] archivos = archivosList.toArray(new File[archivosList.size()]);
-                        SubBatch fullBatch = new SubBatch(idSubBatch, fakeUserid, archivos);
+                    String fakeUserid = "2";
+                    File[] archivos = archivosList.toArray(new File[archivosList.size()]);
+                    SubBatch fullBatch = new SubBatch(idSubBatch, fakeUserid, archivos);
 
-                        List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch);
+                    List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch);
 
-                        SubBatch batch1 = subBatches.get(0);
-                        SubBatch batch2 = subBatches.get(1);
-                        SubBatch batch3 = subBatches.get(2);
+                    SubBatch batch1 = subBatches.get(0);
+                    SubBatch batch2 = subBatches.get(1);
+                    SubBatch batch3 = subBatches.get(2);
 
-                        InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
+                    InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
 //                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
 //                        // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
 
-                        SubBatch batchPDF1;
-                        SubBatch batchPDF2;
-                        SubBatch batchPDF3;
-                        System.out.println("Archivos enviados a conversión...");
-                        if (type.equals("URL")) {
-                            batchPDF1 = nodo1.conversionURL(batch1);
-                            // batchPDF2 = nodo2.conversionURL(batch2);
-                            // batchPDF3 = nodo3.conversionURL(batch3);
-                        } else {
-                            batchPDF1 = nodo1.conversionOffice(batch1);
-                            // batchPDF2 = nodo2.conversionOffice(batch2);
-                            // batchPDF3 = nodo3.conversionOffice(batch3);
-                        }
-                        System.out.println("\nArchivos convertidos");
-                        System.out.println();
-                        System.out.println(Arrays.toString(batchPDF1.files));
-                        // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
-                        String resDownloadURL = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF1.toString());
+                    SubBatch batchPDF1;
+                    SubBatch batchPDF2;
+                    SubBatch batchPDF3;
+                    System.out.println("Archivos enviados a conversión...");
+                    if (type.equals("URL")) {
+                        batchPDF1 = nodo1.conversionURL(batch1);
+                        // batchPDF2 = nodo2.conversionURL(batch2);
+                        // batchPDF3 = nodo3.conversionURL(batch3);
+                    } else {
+                        batchPDF1 = nodo1.conversionOffice(batch1);
+                        // batchPDF2 = nodo2.conversionOffice(batch2);
+                        // batchPDF3 = nodo3.conversionOffice(batch3);
+                    }
+                    System.out.println("\nArchivos convertidos");
+                    System.out.println();
+                    System.out.println(Arrays.toString(batchPDF1.files));
+                    // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
+                    String resDownloadURL = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF1.toString());
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF2.toString());
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF3.toString());
 //                        try
-                        response.setSuccessful(true);
-                        response.setResponse("Archivos convertidos");
-                        response.setDownloadPath("Aquí estará el link de descarga");
-                    } else {
-                        response.setSuccessful(false);
-                        response.setResponse(String.valueOf(response_str));
-                        response.setDownloadPath("");
-                    }
-                } catch (JSONException e) {
-                    try {
-                        JSONObject jsonRes = new JSONObject(res);
-                        response.setDownloadPath("");
-                        response.setSuccessful(false);
-                        response.setResponse(jsonRes.getString("error"));
-                    } catch (JSONException e2) {
-                        // in case of an unexpected error
-                        response.setDownloadPath("");
-                        response.setSuccessful(false);
-                        response.setResponse(e2.toString());
-                    }
+                    response.setSuccessful(true);
+                    response.setResponse("Archivos convertidos");
+                    response.setDownloadPath("Aquí estará el link de descarga");
                 }
-            } else {
-                response.setDownloadPath("");
-                response.setSuccessful(false);
-                response.setResponse("Hubo un error al enviar los archivos");
+            } else if (jsonRes.has("error")) {
+                response.setResponse(jsonRes.getString("error"));
             }
-        } catch (IOException e) {
-            response.setDownloadPath("");
-            response.setSuccessful(false);
-            response.setResponse("Hubo un error al enviar los archivos: " + e.toString());
+
         }
+
         return response;
-    }
+}
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBatchDetailsRequest")
     @ResponsePayload
