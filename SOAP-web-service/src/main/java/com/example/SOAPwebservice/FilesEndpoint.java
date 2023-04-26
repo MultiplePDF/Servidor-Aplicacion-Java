@@ -75,10 +75,9 @@ public class FilesEndpoint {
                         String fakeUserid = "2";
                         File[] archivos = archivosList.toArray(new File[archivosList.size()]);
                         SubBatch fullBatch = new SubBatch(idSubBatch, fakeUserid, archivos);
-                        System.out.println("\n------------------------ FULL BATCH ------------------------\n");
-                        System.out.println(fullBatch);
-                        System.out.println();
-                        List<SubBatch> subBatches = DivideArray.splitArray(fullBatch);
+
+                        List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch);
+
                         SubBatch batch1 = subBatches.get(0);
                         SubBatch batch2 = subBatches.get(1);
                         SubBatch batch3 = subBatches.get(2);
@@ -144,39 +143,56 @@ public class FilesEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getBatchDetailsRequest")
     @ResponsePayload
-    public GetBatchDetailsResponse getBatchDetails(@RequestPayload GetBatchDetailsRequest request) {
+    public GetBatchDetailsResponse getBatchDetails(@RequestPayload GetBatchDetailsRequest request) throws JSONException, IOException {
         GetBatchDetailsResponse response = new GetBatchDetailsResponse();
+        response.setSuccessful(false);
+        response.setBatchesList("[]");
+        response.setResponse("Ocurrió un error");
 
-        String userID = request.getUserID();
         String token = request.getToken();
+        String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/get-userid", "GET", token);
+        JSONObject jsonResUser = new JSONObject(resUserID);
 
-        // TODO: conexión a la base de datos de Yireth y Andrey através de REST
-        // para validar el token, si es valido continua, sino error de autenticación
-
-        if (fakeToken.equals(token)) {
-            try {
-                String res = Rest.connect("http://bd.bucaramanga.upb.edu.co:3000/lote/uploadLotes", "POST", "idUsuario=" + userID);
-                if (res.equals("")) {
-                    response.setResponse("Lote no encontrado");
-                    response.setSuccessful(false);
-                } else {
-                    JSONArray jsonArr = new JSONArray(res);
-                    JSONObject jsonObj = jsonArr.getJSONObject(0);
-                    String dateCreated = jsonObj.getString("createdAt");
-                    response.setDateCreated(dateCreated);
-                    response.setFileQuantity(jsonObj.getInt("numeroArchivos"));
-                    String vigencia = jsonObj.getString("vigencia");
-                    // todo: do the substraction of dates (vigencia-dateCreated) and set it in setTimeExpiration
-                    response.setTimeExpiration(vigencia);
-                }
-            } catch (JSONException | IOException e) {
-                throw new RuntimeException(e);
+        if (jsonResUser.has("id_user")) {
+            String userID = jsonResUser.getString("id_user");
+            JSONObject params = new JSONObject();
+            params.put("userId", userID);
+                    /*[
+                    {
+                        "files": [
+                        {
+                            "fileName": "arepa",
+                                "size": 42,
+                                "filePath": "ruta en rust"
+                        },
+                        {
+                            "fileName": "empanada",
+                                "size": 13,
+                                "filePath": "ruta en rust"
+                        }
+                        ],
+                        "_id": "644973588753a2a164f97d9d",
+                        "userId": "085819fd9161976b7461ccecf20a7885",
+                        "numberFiles": 2,
+                        "batchPath": "C:\\Users\\Henry\\Documents\\GitHub",
+                        "validity": "2023-03-30T00:00:00.000Z",
+                        "status": true,
+                        "createdAt": "2023-04-26T18:54:16.527Z",
+                        "updatedAt": "2023-04-26T18:54:16.527Z"
+                    }
+                    ]*/
+            String res = Rest.connect("http://bd.bucaramanga.upb.edu.co:3000/batch/callBatches", "POST", params.toString());
+            if (!res.equals("")) {
+                response.setSuccessful(true);
+                response.setBatchesList(res);
+                response.setResponse("Se obtuvieron los lotes de archivos correctamente");
             }
-        } else {
-//         If the user is not authenticated, return an error message
-            response.setResponse("Token inválido o expirado");
-            response.setSuccessful(false);
+
+        } else if (jsonResUser.has("error")) {
+            String error = jsonResUser.getString("error");
+            response.setResponse(error);
         }
+
         return response;
     }
 

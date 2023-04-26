@@ -18,7 +18,6 @@ public class LocalTesting {
 
         JSONObject cred = new JSONObject();
         cred.put("name", "Angela");
-        cred.put("lastname", "Remolina");
         cred.put("email", "angela@gmail.com");
         cred.put("password", "123456789");
         cred.put("confirm_password", "123456789");
