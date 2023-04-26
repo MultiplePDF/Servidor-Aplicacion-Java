@@ -59,6 +59,7 @@ public class FilesEndpoint {
                             type = jsonObj.getString("fileExtension");
                             String base64 = jsonObj.getString("base64"); //if url this contains the link
                             String fileName = jsonObj.getString("fileName");
+                            fileName += type;
                             int size = jsonObj.getInt("size");
                             String checksum = jsonObj.getString("checksum");
                             File file;
