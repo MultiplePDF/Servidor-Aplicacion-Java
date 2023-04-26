@@ -74,8 +74,11 @@ public class FilesEndpoint {
 //                        String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/", "GET", token);
                         String fakeUserid = "2";
                         File[] archivos = archivosList.toArray(new File[archivosList.size()]);
+
                         SubBatch fullBatch = new SubBatch(idSubBatch, fakeUserid, archivos);
-                        List<SubBatch> subBatches = DivideArray.splitArray(fullBatch);
+                        System.out.println(Arrays.toString(archivos));
+                        List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch);
+
                         SubBatch batch1 = subBatches.get(0);
                         SubBatch batch2 = subBatches.get(1);
                         SubBatch batch3 = subBatches.get(2);
