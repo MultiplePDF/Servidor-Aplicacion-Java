@@ -2,14 +2,15 @@ package com.example.SOAPwebservice;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class DivideArray {
+public class Balancer {
+
+    static final int TOTAL_NODES = 3;
 
     public static void main(String[] args) {
         File[] files = new File[6];
-        files[0] = new File("1", "1",1);
+        files[0] = new File("1", "1", 1);
         files[0].size = 100;
 
         files[1] = new File("1", "1", 2);
@@ -27,40 +28,36 @@ public class DivideArray {
         files[5] = new File("1", "1", 6);
         files[5].size = 72;
 
-
         SubBatch subBatch = new SubBatch("1","1",files);
-        List<SubBatch> divided = splitArray(subBatch);
+        List<SubBatch> divided = divideSubBatch(subBatch);
 
         for (SubBatch subBatch1 : divided) {
             File[] files1 = subBatch1.files;
             System.out.println(Arrays.toString(files1));
         }
-
     }
 
-    public static List<SubBatch> splitArray(SubBatch subBatch) {
+    public static List<SubBatch> divideSubBatch(SubBatch subBatch) {
         File[] files = subBatch.files;
 
-        int n = files.length;
-        final int k = 3;
+        int totalFiles = files.length;
 
-        // Creamos un array de k sub-arrays vacíos
         List<SubBatch> dividedSubBatch = new ArrayList<>();
-        for (int i = 0; i < k; i++) {
+        for (int i = 0; i < TOTAL_NODES; i++) {
             SubBatch newSubBatch = new SubBatch(subBatch.subBatchID, subBatch.userID, new File[files.length]);
             dividedSubBatch.add(newSubBatch);
         }
 
-        int[] a = new int[k];
+        int[] currentFileIdx = new int[TOTAL_NODES];
         // Distribuimos los elementos del array en los sub-arrays
-        for (int i = n - 1; i >= 0; i--) {
+        for (int i = totalFiles - 1; i >= 0; i--) {
             File file = files[i];
 
             // Buscamos el sub-array con la suma más baja
             int minIndex = 0;
             int minSum = Integer.MAX_VALUE;
-            for (int j = 0; j < k; j++) {
-                int sum = sum(dividedSubBatch.get(j).files);
+            for (int j = 0; j < TOTAL_NODES; j++) {
+                int sum = _sum(dividedSubBatch.get(j).files);
                 if (sum < minSum) {
                     minSum = sum;
                     minIndex = j;
@@ -68,19 +65,16 @@ public class DivideArray {
             }
 
             // Agregamos el elemento al sub-array con la suma más baja
-            dividedSubBatch.get(minIndex).files[a[minIndex]++] = file;
+            dividedSubBatch.get(minIndex).files[currentFileIdx[minIndex]++] = file;
         }
 
-        for (SubBatch batch : dividedSubBatch) {
-            File[] batchFiles = batch.files;
-            batchFiles = Arrays.stream(batchFiles).filter(s -> (s != null)).toArray(File[]::new);
-            batch.files = batchFiles;
-        }
+        for (SubBatch batch : dividedSubBatch)
+            batch.files = Arrays.stream(batch.files).filter(s -> (s != null)).toArray(File[]::new);
 
         return dividedSubBatch;
     }
 
-    public static int sum(File[] files) {
+    private static int _sum(File[] files) {
         int total = 0;
         for (File file : files)
             if (file != null)
