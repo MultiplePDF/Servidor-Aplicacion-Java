@@ -69,7 +69,6 @@ public class FilesEndpoint {
                             }
                             file.size = size;
                             archivosList.add(file);
-                            System.out.println(file.name);
                         }
                         // todo: conectarse al servidor rest con un metodo de getUserIDByToken
 //                        String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/", "GET", token);
@@ -89,11 +88,11 @@ public class FilesEndpoint {
                         SubBatch batchPDF2;
                         SubBatch batchPDF3;
                         if (type.equals("URL")) {
-                            batchPDF1 = nodo1.conversionURL(fullBatch); //to change this is just debugging
+                            batchPDF1 = nodo1.conversionURL(fullBatch); //todo: change this is just debugging
                             // batchPDF2 = nodo2.conversionURL(batch2);
                             // batchPDF3 = nodo3.conversionURL(batch3);
                         } else {
-                            batchPDF1 = nodo1.conversionOffice(fullBatch); //to change this is just debugging
+                            batchPDF1 = nodo1.conversionOffice(fullBatch); //todo: change this is just debugging
                             // batchPDF2 = nodo2.conversionOffice(batch2);
                             // batchPDF3 = nodo3.conversionOffice(batch3);
                         }
@@ -105,10 +104,9 @@ public class FilesEndpoint {
                         Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF1.toString());
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF2.toString());
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF3.toString());
-//                        String link = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/download/"+fakeUserid+"/"+idSubBatch+"/","GET","");
                         response.setSuccessful(true);
                         response.setResponse("Archivos convertidos");
-                        response.setDownloadPath("Aquí estará el link de descarga");
+                        response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/+"+fakeUserid+"/"+idSubBatch);
                     } else {
                         response.setSuccessful(false);
                         response.setResponse(String.valueOf(response_str));
