@@ -97,16 +97,15 @@ public class FilesEndpoint {
                             // batchPDF3 = nodo3.conversionOffice(batch3);
                         }
                         System.out.println(batchPDF1.files.length);
-                        for (File x: batchPDF1.files) {
-                            System.out.println(x.name);
-                        }
                         // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
-                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF1.toString());
+                        System.out.println(batch1.toString());
+                        String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF1.toString());
+                        System.out.println("Respuesta del servidor: "+resFileServer);
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF2.toString());
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF3.toString());
                         response.setSuccessful(true);
                         response.setResponse("Archivos convertidos");
-                        response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/+"+fakeUserid+"/"+idSubBatch);
+                        response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/"+fakeUserid+"/"+idSubBatch);
                     } else {
                         response.setSuccessful(false);
                         response.setResponse(String.valueOf(response_str));
