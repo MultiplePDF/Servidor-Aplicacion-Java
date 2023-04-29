@@ -22,7 +22,7 @@ public class SubBatch implements Serializable {
                 "{\n" +
                         "	\"subBatchID\": \"" + subBatchID + "\",\n" +
                         "	\"userID\": \"" + userID + "\",\n" +
-                        "	\"files\": " + Arrays.toString(files) + ",\n" +
+                        "	\"files\": " + Arrays.toString(files) + "\n" +
                         "}\n";
     }
 
