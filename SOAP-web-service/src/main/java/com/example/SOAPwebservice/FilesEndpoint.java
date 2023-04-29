@@ -98,7 +98,7 @@ public class FilesEndpoint {
                         }
                         System.out.println(batchPDF1.files.length);
                         // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
-                        System.out.println(batch1.toString());
+                        System.out.println(batchPDF1.toString());
                         String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF1.toString());
                         System.out.println("Respuesta del servidor: "+resFileServer);
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF2.toString());
