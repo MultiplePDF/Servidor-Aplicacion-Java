@@ -65,7 +65,7 @@ public class FilesEndpoint {
                             if (type.equals("URL")) {
                                 file = new File(idSubBatch, base64, idFile);
                             } else {
-                                file = new File(idSubBatch, base64, fileName, checksum);
+                                file = new File(idSubBatch, base64, fileName+type, checksum);
                             }
                             file.size = size;
                             archivosList.add(file);
