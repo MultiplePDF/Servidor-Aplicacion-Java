@@ -89,15 +89,18 @@ public class FilesEndpoint {
                         SubBatch batchPDF2;
                         SubBatch batchPDF3;
                         if (type.equals("URL")) {
-                            batchPDF1 = nodo1.conversionURL(batch1);
+                            batchPDF1 = nodo1.conversionURL(fullBatch); //to change this is just debugging
                             // batchPDF2 = nodo2.conversionURL(batch2);
                             // batchPDF3 = nodo3.conversionURL(batch3);
                         } else {
-                            batchPDF1 = nodo1.conversionOffice(batch1);
+                            batchPDF1 = nodo1.conversionOffice(fullBatch); //to change this is just debugging
                             // batchPDF2 = nodo2.conversionOffice(batch2);
                             // batchPDF3 = nodo3.conversionOffice(batch3);
                         }
-                        System.out.println(batchPDF1.toString());
+                        System.out.println(batchPDF1.files.length);
+                        for (File x: batchPDF1.files) {
+                            System.out.println(x.name);
+                        }
                         // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
                         Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF1.toString());
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF2.toString());
