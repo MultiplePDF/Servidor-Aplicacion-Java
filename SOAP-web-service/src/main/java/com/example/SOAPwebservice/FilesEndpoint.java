@@ -69,6 +69,7 @@ public class FilesEndpoint {
                             }
                             file.size = size;
                             archivosList.add(file);
+                            System.out.println(file.name);
                         }
                         // todo: conectarse al servidor rest con un metodo de getUserIDByToken
 //                        String resUserID = Rest.connect("http://autenticacion.bucaramanga.upb.edu.co:4000/auth/", "GET", token);
