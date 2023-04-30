@@ -100,12 +100,14 @@ public class FilesEndpoint {
                         // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
                         System.out.println(batchPDF1.toString());
                         String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF1.toString());
-                        System.out.println("Respuesta del servidor: "+resFileServer);
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF2.toString());
 //                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF3.toString());
-                        response.setSuccessful(true);
-                        response.setResponse("Archivos convertidos");
-                        response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/"+fakeUserid+"/"+idSubBatch);
+                        System.out.println("Respuesta del servidor: "+resFileServer);
+                        if (resFileServer != null){
+                            response.setSuccessful(true);
+                            response.setResponse("Archivos convertidos");
+                            response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/"+fakeUserid+"/"+idSubBatch);
+                        }
                     } else {
                         response.setSuccessful(false);
                         response.setResponse(String.valueOf(response_str));
