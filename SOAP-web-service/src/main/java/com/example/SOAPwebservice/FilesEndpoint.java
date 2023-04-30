@@ -87,15 +87,30 @@ public class FilesEndpoint {
                     InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
 //                        // contratoRMI nodo2 = ProducingWebServiceApplication.nodo2;
 //                        // contratoRMI nodo3 = ProducingWebServiceApplication.nodo3;
-
-                    SubBatch batchPDF1;
-                    SubBatch batchPDF2;
-                    SubBatch batchPDF3;
-                    System.out.println("Archivos enviados a conversión...");
-                    if (type.equals("URL")) {
-                        batchPDF1 = nodo1.conversionURL(batch1);
-                        // batchPDF2 = nodo2.conversionURL(batch2);
-                        // batchPDF3 = nodo3.conversionURL(batch3);
+                        SubBatch batchPDF1;
+                        SubBatch batchPDF2;
+                        SubBatch batchPDF3;
+                        if (type.equals("URL")) {
+                            batchPDF1 = nodo1.conversionURL(fullBatch); //todo: change this is just debugging
+                            // batchPDF2 = nodo2.conversionURL(batch2);
+                            // batchPDF3 = nodo3.conversionURL(batch3);
+                        } else {
+                            batchPDF1 = nodo1.conversionOffice(fullBatch); //todo: change this is just debugging
+                            // batchPDF2 = nodo2.conversionOffice(batch2);
+                            // batchPDF3 = nodo3.conversionOffice(batch3);
+                        }
+                        System.out.println(batchPDF1.files.length);
+                        // todo: enviar archivos al servidor de archivos para que nos devuelva el link de descarga
+                        System.out.println(batchPDF1.toString());
+                        String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF1.toString());
+//                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF2.toString());
+//                        Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode","POST",batchPDF3.toString());
+                        System.out.println("Respuesta del servidor: "+resFileServer);
+                        if (resFileServer != null){
+                            response.setSuccessful(true);
+                            response.setResponse("Archivos convertidos");
+                            response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/"+fakeUserid+"/"+idSubBatch);
+                        }
                     } else {
                         batchPDF1 = nodo1.conversionOffice(batch1);
                         // batchPDF2 = nodo2.conversionOffice(batch2);

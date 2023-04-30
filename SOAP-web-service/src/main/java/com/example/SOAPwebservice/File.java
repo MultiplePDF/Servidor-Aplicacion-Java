@@ -37,7 +37,7 @@ public class File implements Serializable {
                 "        \"base64\": \"" + base64 + "\",\n" +
                 "        \"fileName\": \"" + name + "\",\n" +
                 "        \"size\": " + size + ",\n" +
-                "        \"checksum\": \"" + checksum + "\",\n" +
+                "        \"checksum\": \"" + checksum + "\"\n" +
                 "    }";
     }
 
