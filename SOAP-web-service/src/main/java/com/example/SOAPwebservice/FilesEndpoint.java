@@ -10,6 +10,9 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -78,36 +81,46 @@ public class FilesEndpoint {
                 System.out.println("Nodo 2: " + batch2.files.length + " archivos");
                 System.out.println("Nodo 3: " + batch3.files.length + " archivos");
 
-                System.out.println("\nConexión al servidor RMI para conversión de archivos");
-                InterfaceRMI nodo1 = ProducingWebServiceApplication.nodo1;
-                InterfaceRMI nodo2 = ProducingWebServiceApplication.nodo2;
-                InterfaceRMI nodo3 = ProducingWebServiceApplication.nodo3;
+                System.out.println("\nIniciando conexión al servidor RMI para conversión de archivos");
+                InterfaceRMI nodo1;
+                InterfaceRMI nodo2;
+                InterfaceRMI nodo3;
+                try {
+                    nodo1 = (InterfaceRMI) Naming.lookup("rmi://nodo1.bucaramanga.upb.edu.co:1099/convertidor");
+                    nodo2 = (InterfaceRMI) Naming.lookup("rmi://nodo2.bucaramanga.upb.edu.co:1099/convertidor");
+                    nodo3 = (InterfaceRMI) Naming.lookup("rmi://nodo3.bucaramanga.upb.edu.co:1099/convertidor");
 
-                SubBatch batchPDF1;
-                SubBatch batchPDF2;
-                SubBatch batchPDF3;
-                if (type.equals("URL")) {
-                    batchPDF1 = nodo1.conversionURL(batch1);
-                    batchPDF2 = nodo2.conversionURL(batch2);
-                    batchPDF3 = nodo3.conversionURL(batch3);
-                } else {
-                    batchPDF1 = nodo1.conversionOffice(batch1);
-                    batchPDF2 = nodo2.conversionOffice(batch2);
-                    batchPDF3 = nodo3.conversionOffice(batch3);
-                }
+                    System.out.println("Conexión exitosa!");
 
-                System.out.println("\nConexión al servidor de archivos para almacenamiento");
-                String resFileServer1 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF1.toString());
-                String resFileServer2 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF2.toString());
-                String resFileServer3 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF3.toString());
-                System.out.println("Respuesta del servidor nodo 1: " + resFileServer1);
-                System.out.println("Respuesta del servidor nodo 2: " + resFileServer2);
-                System.out.println("Respuesta del servidor nodo 3: " + resFileServer3);
-                if (resFileServer1 != null && resFileServer2 != null && resFileServer3 != null) {
-                    response.setSuccessful(true);
-                    response.setResponse("Archivos convertidos");
-                    response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/" + userID + "/" + idSubBatch);
-                    System.out.println("\n----------------Metodo finalizado correctamente--------------------");
+                    SubBatch batchPDF1;
+                    SubBatch batchPDF2;
+                    SubBatch batchPDF3;
+                    if (type.equals("URL")) {
+                        batchPDF1 = nodo1.conversionURL(batch1);
+                        batchPDF2 = nodo2.conversionURL(batch2);
+                        batchPDF3 = nodo3.conversionURL(batch3);
+                    } else {
+                        batchPDF1 = nodo1.conversionOffice(batch1);
+                        batchPDF2 = nodo2.conversionOffice(batch2);
+                        batchPDF3 = nodo3.conversionOffice(batch3);
+                    }
+
+                    System.out.println("\nConexión al servidor de archivos para almacenamiento");
+                    String resFileServer1 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF1.toString());
+                    String resFileServer2 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF2.toString());
+                    String resFileServer3 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF3.toString());
+                    System.out.println("Respuesta del servidor nodo 1: " + resFileServer1);
+                    System.out.println("Respuesta del servidor nodo 2: " + resFileServer2);
+                    System.out.println("Respuesta del servidor nodo 3: " + resFileServer3);
+                    if (resFileServer1 != null && resFileServer2 != null && resFileServer3 != null) {
+                        response.setSuccessful(true);
+                        response.setResponse("Archivos convertidos");
+                        response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/" + userID + "/" + idSubBatch);
+                        System.out.println("\n----------------Metodo finalizado correctamente--------------------");
+                    }
+
+                } catch (NotBoundException | RemoteException | MalformedURLException e) {
+                    System.out.println("Conexión RMI fallida: "+ e);
                 }
             } else if (jsonResUser.has("error")) {
                 response.setResponse(jsonResUser.getString("error"));
