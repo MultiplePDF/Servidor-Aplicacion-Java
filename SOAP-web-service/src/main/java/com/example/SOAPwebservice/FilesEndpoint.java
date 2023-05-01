@@ -65,10 +65,10 @@ public class FilesEndpoint {
                         file = new File(idSubBatch, base64, idFile);
                     } else {
                         file = new File(idSubBatch, base64, fileName, checksum);
+                        System.out.println(file.name);
                     }
                     file.size = size;
                     fileList.add(file);
-                    System.out.println(file.name);
                 }
                 File[] archivos = fileList.toArray(new File[fileList.size()]);
                 SubBatch fullBatch = new SubBatch(idSubBatch, userID, archivos);
@@ -104,14 +104,17 @@ public class FilesEndpoint {
                         batchPDF2 = nodo2.conversionOffice(batch2);
                         batchPDF3 = nodo3.conversionOffice(batch3);
                     }
+                    System.out.println("ID batch convertido a PDF 1: " + batchPDF1.subBatchID);
+                    System.out.println("ID batch convertido a PDF 2: " + batchPDF2.subBatchID);
+                    System.out.println("ID batch convertido a PDF 3: " + batchPDF3.subBatchID);
 
                     System.out.println("\nConexión al servidor de archivos para almacenamiento");
                     String resFileServer1 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF1.toString());
                     String resFileServer2 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF2.toString());
                     String resFileServer3 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF3.toString());
-                    System.out.println("Respuesta del servidor nodo 1: " + resFileServer1);
-                    System.out.println("Respuesta del servidor nodo 2: " + resFileServer2);
-                    System.out.println("Respuesta del servidor nodo 3: " + resFileServer3);
+                    System.out.println("Respuesta del servidor de archivos nodo 1: " + resFileServer1);
+                    System.out.println("Respuesta del servidor de archivos nodo 2: " + resFileServer2);
+                    System.out.println("Respuesta del servidor de archivos nodo 3: " + resFileServer3);
                     if (resFileServer1 != null && resFileServer2 != null && resFileServer3 != null) {
                         response.setSuccessful(true);
                         response.setResponse("Archivos convertidos");
@@ -120,7 +123,7 @@ public class FilesEndpoint {
                     }
 
                 } catch (NotBoundException | RemoteException | MalformedURLException e) {
-                    System.out.println("Conexión RMI fallida: "+ e);
+                    System.out.println("Conexión RMI fallida: " + e);
                 }
             } else if (jsonResUser.has("error")) {
                 response.setResponse(jsonResUser.getString("error"));
