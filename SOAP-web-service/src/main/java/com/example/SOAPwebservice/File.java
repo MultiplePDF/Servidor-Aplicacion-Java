@@ -24,6 +24,7 @@ public class File implements Serializable {
 
         this.subBatchID = subBatchID;
         this.url = url;
+        this.base64 = url;
         this.fileID = fileID;
        
     }
