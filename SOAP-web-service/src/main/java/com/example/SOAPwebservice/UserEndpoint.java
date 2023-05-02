@@ -9,8 +9,6 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-import com.example.SOAPwebservice.Utils;
-
 @Endpoint
 public class UserEndpoint {
 
@@ -123,30 +121,33 @@ public class UserEndpoint {
     @ResponsePayload
     public ChangePasswordResponse changePassword(@RequestPayload ChangePasswordRequest request) {
         ChangePasswordResponse response = new ChangePasswordResponse();
-        String token = request.getToken();
-
-        // TODO: validate token with auth
-
-        String oldPassword = request.getOldPassword();
-        String newPassword = request.getNewPassword();
-        String confirmPassword = request.getConfirmPassword();
-
-        JSONObject params = new JSONObject();
-        params.put("oldPassword", oldPassword);
-        params.put("newPassword", newPassword);
-        params.put("confirmPassword", confirmPassword);
 
         try {
-            String res = Rest.connect(Utils.AUTH_URL + "/change-password", "POST", params.toString());
-            JSONObject responseJSON = new JSONObject(res);
-            if (responseJSON.has("error")) {
-                response.setSuccessful(false);
-                response.setResponse(responseJSON.getString("error"));
-            } else {
-                response.setSuccessful(true);
-                response.setResponse("Contraseña cambiada correctamente");
-            }
+            boolean isTokenValid = false;
+            String tokenRes = Rest.connect(Utils.AUTH_URL + "/validate", "GET", request.getToken());
+            JSONObject tokenResJSON = new JSONObject(tokenRes);
 
+            isTokenValid = tokenResJSON.has("message");
+
+            if (!isTokenValid) {
+                response.setSuccessful(false);
+                response.setResponse(tokenResJSON.getString("error"));
+            } else {
+                JSONObject params = new JSONObject();
+                params.put("oldPassword", request.getOldPassword());
+                params.put("newPassword", request.getNewPassword());
+                params.put("confirmPassword", request.getConfirmPassword());
+
+                String res = Rest.connect(Utils.AUTH_URL + "/change-password", "POST", params.toString());
+                JSONObject responseJSON = new JSONObject(res);
+                if (responseJSON.has("error")) {
+                    response.setSuccessful(false);
+                    response.setResponse(responseJSON.getString("error"));
+                } else {
+                    response.setSuccessful(true);
+                    response.setResponse("Contraseña cambiada correctamente");
+                }
+            }
         } catch (IOException ioe) {
             response.setSuccessful(false);
             response.setResponse("Sin respuesta del servidor");
