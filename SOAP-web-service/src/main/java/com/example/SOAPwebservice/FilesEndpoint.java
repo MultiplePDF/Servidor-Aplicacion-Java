@@ -108,14 +108,17 @@ public class FilesEndpoint {
                     System.out.println("ID batch convertido a PDF 2: " + batchPDF2.subBatchID);
                     System.out.println("ID batch convertido a PDF 3: " + batchPDF3.subBatchID);
 
+                    File[] allFiles = new File[batch1.files.length + batch2.files.length + batch3.files.length];
+                    System.arraycopy(batch1.files, 0, allFiles, 0, batch1.files.length);
+                    System.arraycopy(batch2.files, 0, allFiles, batch1.files.length, batch2.files.length);
+                    System.arraycopy(batch3.files, 0, allFiles, batch1.files.length + batch2.files.length, batch3.files.length);
+                    SubBatch batchToSend = new SubBatch(batch1.subBatchID,batch1.userID,allFiles);
+
                     System.out.println("\nConexión al servidor de archivos para almacenamiento");
-                    String resFileServer1 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF1.toString());
-                    String resFileServer2 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF2.toString());
-                    String resFileServer3 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF3.toString());
-                    System.out.println("Respuesta del servidor de archivos nodo 1: " + resFileServer1);
-                    System.out.println("Respuesta del servidor de archivos nodo 2: " + resFileServer2);
-                    System.out.println("Respuesta del servidor de archivos nodo 3: " + resFileServer3);
-                    if (resFileServer1 != null && resFileServer2 != null && resFileServer3 != null) {
+                    String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchToSend.toString());
+                    System.out.println("Respuesta del servidor de archivos nodo 1: " + resFileServer);
+
+                    if (resFileServer != null) {
                         response.setSuccessful(true);
                         response.setResponse("Archivos convertidos");
                         response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/" + userID + "/" + idSubBatch);
