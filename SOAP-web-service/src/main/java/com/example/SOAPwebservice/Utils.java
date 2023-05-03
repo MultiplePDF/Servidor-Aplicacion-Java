@@ -6,6 +6,10 @@ import java.security.MessageDigest;
 import java.util.Base64;
 
 public class Utils {
+
+    public static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
+    public static final String AUTH_URL = "http://autenticacion.bucaramanga.upb.edu.co:4000/auth";
+
     public static void main(String[] args) throws IOException {
         FileInputStream fis = new FileInputStream(
                 new File("C:\\Users\\Angela\\Downloads\\Notas Spyder.docx"));

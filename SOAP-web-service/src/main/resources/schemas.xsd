@@ -108,9 +108,10 @@
     <xs:element name="changePasswordRequest">
         <xs:complexType>
             <xs:sequence>
+                <xs:element name="token" type="xs:string"/>
                 <xs:element name="oldPassword" type="xs:string"/>
                 <xs:element name="newPassword" type="xs:string"/>
-                <xs:element name="token" type="xs:string"/>
+                <xs:element name="confirmPassword" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
