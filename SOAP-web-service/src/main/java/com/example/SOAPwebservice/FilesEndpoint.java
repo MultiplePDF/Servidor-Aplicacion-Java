@@ -108,11 +108,11 @@ public class FilesEndpoint {
                     System.out.println("ID batch convertido a PDF 2: " + batchPDF2.subBatchID);
                     System.out.println("ID batch convertido a PDF 3: " + batchPDF3.subBatchID);
 
-                    File[] allFiles = new File[batch1.files.length + batch2.files.length + batch3.files.length];
-                    System.arraycopy(batch1.files, 0, allFiles, 0, batch1.files.length);
-                    System.arraycopy(batch2.files, 0, allFiles, batch1.files.length, batch2.files.length);
-                    System.arraycopy(batch3.files, 0, allFiles, batch1.files.length + batch2.files.length, batch3.files.length);
-                    SubBatch batchToSend = new SubBatch(batch1.subBatchID,batch1.userID,allFiles);
+                    File[] allFiles = new File[batchPDF1.files.length + batchPDF2.files.length + batchPDF3.files.length];
+                    System.arraycopy(batchPDF1.files, 0, allFiles, 0, batchPDF1.files.length);
+                    System.arraycopy(batchPDF1.files, 0, allFiles, batchPDF1.files.length, batchPDF2.files.length);
+                    System.arraycopy(batchPDF1.files, 0, allFiles, batchPDF1.files.length + batchPDF2.files.length, batchPDF3.files.length);
+                    SubBatch batchToSend = new SubBatch(batchPDF1.subBatchID,batchPDF1.userID,allFiles);
 
                     System.out.println("\nConexión al servidor de archivos para almacenamiento");
                     String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchToSend.toString());
