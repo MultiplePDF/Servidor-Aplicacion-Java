@@ -108,12 +108,25 @@ public class FilesEndpoint {
                     System.out.println("ID batch convertido a PDF 2: " + batchPDF2.subBatchID);
                     System.out.println("ID batch convertido a PDF 3: " + batchPDF3.subBatchID);
 
-                    File[] allFiles = new File[batchPDF1.files.length + batchPDF2.files.length + batchPDF3.files.length];
-                    System.arraycopy(batchPDF1.files, 0, allFiles, 0, batchPDF1.files.length);
-                    System.arraycopy(batchPDF1.files, 0, allFiles, batchPDF1.files.length, batchPDF2.files.length);
-                    System.arraycopy(batchPDF1.files, 0, allFiles, batchPDF1.files.length + batchPDF2.files.length, batchPDF3.files.length);
-                    SubBatch batchToSend = new SubBatch(batchPDF1.subBatchID,batchPDF1.userID,allFiles);
+                    File[] files1 = batchPDF1.files;
+                    File[] files2 = batchPDF2.files;
+                    File[] files3 = batchPDF3.files;
 
+                    File[] allFiles = new File[files1.length + files2.length + files3.length];
+
+                    int index = 0;
+                    for (int i = 0; i < files1.length; i++) {
+                        allFiles[index++] = files1[i];
+                    }
+                    for (int i = 0; i < files2.length; i++) {
+                        allFiles[index++] = files2[i];
+                    }
+                    for (int i = 0; i < files3.length; i++) {
+                        allFiles[index++] = files3[i];
+                    }
+
+                    SubBatch batchToSend = new SubBatch(batchPDF1.subBatchID, batchPDF1.userID, allFiles);
+                    System.out.println("\nUnificado los 3 batches en 1 solo batch de: " + batchToSend.files.length + "archivos");
                     System.out.println("\nConexión al servidor de archivos para almacenamiento");
                     String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchToSend.toString());
                     System.out.println("Respuesta del servidor de archivos nodo 1: " + resFileServer);
