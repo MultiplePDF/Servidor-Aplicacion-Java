@@ -199,20 +199,41 @@ public class UserEndpoint {
         return response;
     }
 
-    // TODO: implement it
-//    @PayloadRoot(namespace = Utils.NAMESPACE_URI, localPart = "editUserDetailsRequest")
-//    @ResponsePayload
-//    public EditUserDetailsResponse editUserDetails(@RequestPayload EditUserDetailsRequest request) {
-//        EditUserDetailsResponse response = new EditUserDetailsResponse();
-//
-//        // TODO: esperar que el servidor Rest lo tenga listo para implementar la conexión
-//        String token = request.getToken();
-//
-//        String newName = request.getName();
-//        String newEmail = request.getEmail();
-//
-//        response.setResponse("Detalles del usuario editados correctamente");
-//        response.setSuccessful(true);
-//        return response;
-//    }
+    @PayloadRoot(namespace = Utils.NAMESPACE_URI, localPart = "editUserDetailsRequest")
+    @ResponsePayload
+    public EditUserDetailsResponse editUserDetails(@RequestPayload EditUserDetailsRequest request) {
+        EditUserDetailsResponse response = new EditUserDetailsResponse();
+
+        // TODO: esperar que el servidor Rest lo tenga listo para implementar la conexión
+        try {
+            boolean isTokenValid = false;
+            String tokenRes = Rest.connect(Utils.AUTH_URL + "/validate", "GET", request.getToken());
+            JSONObject tokenResJSON = new JSONObject(tokenRes);
+    
+            isTokenValid = tokenResJSON.has("message");
+    
+            if (!isTokenValid) {
+                response.setSuccessful(false);
+                response.setResponse(tokenResJSON.getString("error"));
+            } else {
+                JSONObject params = new JSONObject();
+                params.put("name", request.getName());
+                params.put("email", request.getEmail());
+                
+                String res = Rest.connect(Utils.AUTH_URL + "/update-user", "POST", params.toString());
+                JSONObject resJSON = new JSONObject(res);
+                if (resJSON.has("error")) {
+                    response.setSuccessful(false);
+                    response.setResponse(resJSON.getString("error"));
+                } else {
+					response.setSuccessful(true);
+					response.setResponse(resJSON.toString());
+                }
+            }
+        } catch (IOException ioe) {
+            response.setSuccessful( false );
+            response.setResponse("Sin respuesta del servidor");
+        }
+        return response;
+    }
 }
