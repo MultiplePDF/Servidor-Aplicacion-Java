@@ -108,14 +108,30 @@ public class FilesEndpoint {
                     System.out.println("ID batch convertido a PDF 2: " + batchPDF2.subBatchID);
                     System.out.println("ID batch convertido a PDF 3: " + batchPDF3.subBatchID);
 
+                    File[] files1 = batchPDF1.files;
+                    File[] files2 = batchPDF2.files;
+                    File[] files3 = batchPDF3.files;
+
+                    File[] allFiles = new File[files1.length + files2.length + files3.length];
+
+                    int index = 0;
+                    for (int i = 0; i < files1.length; i++) {
+                        allFiles[index++] = files1[i];
+                    }
+                    for (int i = 0; i < files2.length; i++) {
+                        allFiles[index++] = files2[i];
+                    }
+                    for (int i = 0; i < files3.length; i++) {
+                        allFiles[index++] = files3[i];
+                    }
+
+                    SubBatch batchToSend = new SubBatch(batchPDF1.subBatchID, batchPDF1.userID, allFiles);
+                    System.out.println("\nUnificado los 3 batches en 1 solo batch de: " + batchToSend.files.length + "archivos");
                     System.out.println("\nConexión al servidor de archivos para almacenamiento");
-                    String resFileServer1 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF1.toString());
-                    String resFileServer2 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF2.toString());
-                    String resFileServer3 = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchPDF3.toString());
-                    System.out.println("Respuesta del servidor de archivos nodo 1: " + resFileServer1);
-                    System.out.println("Respuesta del servidor de archivos nodo 2: " + resFileServer2);
-                    System.out.println("Respuesta del servidor de archivos nodo 3: " + resFileServer3);
-                    if (resFileServer1 != null && resFileServer2 != null && resFileServer3 != null) {
+                    String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchToSend.toString());
+                    System.out.println("Respuesta del servidor de archivos nodo 1: " + resFileServer);
+
+                    if (resFileServer != null) {
                         response.setSuccessful(true);
                         response.setResponse("Archivos convertidos");
                         response.setDownloadPath("http://bd.bucaramanga.upb.edu.co:4000/download_batch/" + userID + "/" + idSubBatch);
