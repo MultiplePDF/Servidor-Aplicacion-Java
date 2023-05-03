@@ -99,23 +99,30 @@ public class UserEndpoint {
         return response;
     }
 
-    // TODO: implement it
-//    @PayloadRoot(namespace = Utils.NAMESPACE_URI, localPart = "forgotRequest")
-//    @ResponsePayload
-//    public ForgotResponse forgotPassword(@RequestPayload ForgotRequest request) {
-//        ForgotResponse response = new ForgotResponse();
-//
-//        String email = request.getEmail();
-//
-//        // TODO: esperar que el servidor Rest lo tenga listo para implementar la conexión
-////		if(rest == email sent)
-//        response.setSuccessful(true);
-//        response.setResponse("¡Email enviado!");
-////		else
-//        response.setSuccessful(false);
-//        response.setResponse("Error al intentar recuperar el contraseña");
-//        return response;
-//    }
+    @PayloadRoot(namespace = Utils.NAMESPACE_URI, localPart = "forgotRequest")
+    @ResponsePayload
+    public ForgotResponse forgotPassword(@RequestPayload ForgotRequest request) {
+        ForgotResponse response = new ForgotResponse();
+        
+        try {
+            JSONObject params = new JSONObject();
+            params.put("email", request.getEmail());
+            String res = Rest.connect(Utils.AUTH_URL + "/forgot-password", "POST", params.toString());
+            JSONObject resJSON = new JSONObject(res);
+            if (resJSON.has("error")) {
+                response.setSuccessful(false);
+                response.setResponse(resJSON.getString("error"));
+            } else {
+                response.setSuccessful(true);
+                response.setResponse(resJSON.toString()); // TODO: change if necessary
+            }
+            
+        } catch(IOException ioe) {
+            response.setSuccessful(false);
+            response.setResponse("Sin respuesta del servidor");
+        }
+        return response;
+    }
 
     @PayloadRoot(namespace = Utils.NAMESPACE_URI, localPart = "changePasswordRequest")
     @ResponsePayload
@@ -198,7 +205,7 @@ public class UserEndpoint {
         }
         return response;
     }
-    
+
     @PayloadRoot(namespace = Utils.NAMESPACE_URI, localPart = "editUserDetailsRequest")
     @ResponsePayload
     public EditUserDetailsResponse editUserDetails(@RequestPayload EditUserDetailsRequest request) {
