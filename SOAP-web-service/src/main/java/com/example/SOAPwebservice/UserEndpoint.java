@@ -198,7 +198,7 @@ public class UserEndpoint {
         }
         return response;
     }
-
+    
     @PayloadRoot(namespace = Utils.NAMESPACE_URI, localPart = "editUserDetailsRequest")
     @ResponsePayload
     public EditUserDetailsResponse editUserDetails(@RequestPayload EditUserDetailsRequest request) {
