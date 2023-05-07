@@ -6,8 +6,6 @@ import java.util.List;
 
 public class Balancer {
 
-    static final int TOTAL_NODES = 3;
-
     public static void main(String[] args) {
         File[] files = new File[6];
         files[0] = new File("1", "1", 1);
@@ -29,7 +27,7 @@ public class Balancer {
         files[5].size = 72;
 
         SubBatch subBatch = new SubBatch("1","1",files);
-        List<SubBatch> divided = divideSubBatch(subBatch);
+        List<SubBatch> divided = divideSubBatch(subBatch, 2);
 
         for (SubBatch subBatch1 : divided) {
             File[] files1 = subBatch1.files;
@@ -37,18 +35,18 @@ public class Balancer {
         }
     }
 
-    public static List<SubBatch> divideSubBatch(SubBatch subBatch) {
+    public static List<SubBatch> divideSubBatch(SubBatch subBatch, int availableNodes) {
         File[] files = subBatch.files;
 
         int totalFiles = files.length;
 
         List<SubBatch> dividedSubBatch = new ArrayList<>();
-        for (int i = 0; i < TOTAL_NODES; i++) {
+        for (int i = 0; i < availableNodes; i++) {
             SubBatch newSubBatch = new SubBatch(subBatch.subBatchID, subBatch.userID, new File[files.length]);
             dividedSubBatch.add(newSubBatch);
         }
 
-        int[] currentFileIdx = new int[TOTAL_NODES];
+        int[] currentFileIdx = new int[availableNodes];
         // Distribuimos los elementos del array en los sub-arrays
         for (int i = totalFiles - 1; i >= 0; i--) {
             File file = files[i];
@@ -56,7 +54,7 @@ public class Balancer {
             // Buscamos el sub-array con la suma más baja
             int minIndex = 0;
             int minSum = Integer.MAX_VALUE;
-            for (int j = 0; j < TOTAL_NODES; j++) {
+            for (int j = 0; j < availableNodes; j++) {
                 int sum = _sum(dividedSubBatch.get(j).files);
                 if (sum < minSum) {
                     minSum = sum;
