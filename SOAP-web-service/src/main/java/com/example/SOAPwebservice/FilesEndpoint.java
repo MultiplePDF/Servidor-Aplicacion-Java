@@ -1,26 +1,38 @@
 package com.example.SOAPwebservice;
 
-import io.spring.guides.gs_producing_web_service.*;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+// Spring
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
+// Exceptions
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+import org.json.JSONException;
+
+// Java Net
+import java.net.URL;
+
+// JSON
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+// RMI
+import java.rmi.Naming;
+
+// Java Utils
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+// SOAP
+import io.spring.guides.gs_producing_web_service.GetBatchDetailsRequest;
+import io.spring.guides.gs_producing_web_service.GetBatchDetailsResponse;
+import io.spring.guides.gs_producing_web_service.SendBatchRequest;
+import io.spring.guides.gs_producing_web_service.SendBatchResponse;
 
 @Endpoint
 public class FilesEndpoint {
@@ -32,6 +44,7 @@ public class FilesEndpoint {
     @ResponsePayload
     public SendBatchResponse sendBatch(@RequestPayload SendBatchRequest request) throws JSONException, IOException {
         System.out.println("\n----------------Inicio método SendBatch--------------------");
+
         SendBatchResponse response = new SendBatchResponse();
         response.setDownloadPath("");
         response.setSuccessful(false);
@@ -72,61 +85,55 @@ public class FilesEndpoint {
                 }
                 File[] archivos = fileList.toArray(new File[fileList.size()]);
                 SubBatch fullBatch = new SubBatch(idSubBatch, userID, archivos);
-                System.out.println("\nDividiendo cargas para cada nodo:");
-                List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch);
-                SubBatch batch1 = subBatches.get(0);
-                SubBatch batch2 = subBatches.get(1);
-                SubBatch batch3 = subBatches.get(2);
-                System.out.println("Nodo 1: " + batch1.files.length + " archivos");
-                System.out.println("Nodo 2: " + batch2.files.length + " archivos");
-                System.out.println("Nodo 3: " + batch3.files.length + " archivos");
 
                 System.out.println("\nIniciando conexión al servidor RMI para conversión de archivos");
-                InterfaceRMI nodo1;
-                InterfaceRMI nodo2;
-                InterfaceRMI nodo3;
+
+                List<InterfaceRMI> availableNodes = new ArrayList<>();
                 try {
-                    nodo1 = (InterfaceRMI) Naming.lookup("rmi://nodo1.bucaramanga.upb.edu.co:1099/convertidor");
-                    nodo2 = (InterfaceRMI) Naming.lookup("rmi://nodo2.bucaramanga.upb.edu.co:1099/convertidor");
-                    nodo3 = (InterfaceRMI) Naming.lookup("rmi://nodo3.bucaramanga.upb.edu.co:1099/convertidor");
+                    if (_isValidURL("rmi://nodo1.bucaramanga.upb.edu.co:1099/convertidor"))
+                        availableNodes.add((InterfaceRMI) Naming.lookup("rmi://nodo1.bucaramanga.upb.edu.co:1099/convertidor"));
+
+                    if (_isValidURL("rmi://nodo2.bucaramanga.upb.edu.co:1099/convertidor"))
+                        availableNodes.add((InterfaceRMI) Naming.lookup("rmi://nodo2.bucaramanga.upb.edu.co:1099/convertidor"));
+
+                    if (_isValidURL("rmi://nodo3.bucaramanga.upb.edu.co:1099/convertidor"))
+                        availableNodes.add((InterfaceRMI) Naming.lookup("rmi://nodo3.bucaramanga.upb.edu.co:1099/convertidor"));
+
+                    if (availableNodes.size() == 0) {
+                        response.setResponse("No se ha encontrado ningun nodo disponible.");
+                        return response;
+                    }
+
+                    System.out.println("\nDividiendo cargas para cada nodo:");
+                    List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch, availableNodes.size());
 
                     System.out.println("Conexión exitosa!");
 
-                    SubBatch batchPDF1;
-                    SubBatch batchPDF2;
-                    SubBatch batchPDF3;
-                    if (type.equals("URL")) {
-                        batchPDF1 = nodo1.conversionURL(batch1);
-                        batchPDF2 = nodo2.conversionURL(batch2);
-                        batchPDF3 = nodo3.conversionURL(batch3);
-                    } else {
-                        batchPDF1 = nodo1.conversionOffice(batch1);
-                        batchPDF2 = nodo2.conversionOffice(batch2);
-                        batchPDF3 = nodo3.conversionOffice(batch3);
-                    }
-                    System.out.println("ID batch convertido a PDF 1: " + batchPDF1.subBatchID);
-                    System.out.println("ID batch convertido a PDF 2: " + batchPDF2.subBatchID);
-                    System.out.println("ID batch convertido a PDF 3: " + batchPDF3.subBatchID);
+                    List<SubBatch> convertedSubBatches = new ArrayList<>();
+                    for (int i = 0; i < availableNodes.size(); ++i) {
+                        InterfaceRMI availableNode = availableNodes.get(i);
+                        SubBatch convertedSubBatch;
 
-                    File[] files1 = batchPDF1.files;
-                    File[] files2 = batchPDF2.files;
-                    File[] files3 = batchPDF3.files;
+                        if (type.equals("URL"))
+                            convertedSubBatch = availableNode.conversionURL(subBatches.get(i));
+                        else
+                            convertedSubBatch = availableNode.conversionOffice(subBatches.get(i));
 
-                    File[] allFiles = new File[files1.length + files2.length + files3.length];
-
-                    int index = 0;
-                    for (int i = 0; i < files1.length; i++) {
-                        allFiles[index++] = files1[i];
-                    }
-                    for (int i = 0; i < files2.length; i++) {
-                        allFiles[index++] = files2[i];
-                    }
-                    for (int i = 0; i < files3.length; i++) {
-                        allFiles[index++] = files3[i];
+                        convertedSubBatches.add(convertedSubBatch);
                     }
 
-                    SubBatch batchToSend = new SubBatch(batchPDF1.subBatchID, batchPDF1.userID, allFiles);
-                    System.out.println("\nUnificado los 3 batches en 1 solo batch de: " + batchToSend.files.length + "archivos");
+                    for (int i = 0; i < convertedSubBatches.size(); ++i)
+                        System.out.println("ID batch convertido a PDF " + i + ": " + convertedSubBatches.get(i).subBatchID);
+
+                    List<File> convertedFiles = new ArrayList<>();
+                    for (SubBatch convertedSubBatch : convertedSubBatches) {
+                        File[] convertedSubBatchFiles = convertedSubBatch.files;
+                        for (File convertedSubBatchFile : convertedSubBatchFiles)
+                            convertedFiles.add(convertedSubBatchFile);
+                    }
+
+                    SubBatch batchToSend = new SubBatch(idSubBatch, userID, (File[]) convertedFiles.toArray());
+                    System.out.println("\nUnificado los " + convertedSubBatches.size() + " batches en 1 solo batch de: " + batchToSend.files.length + "archivos");
                     System.out.println("\nConexión al servidor de archivos para almacenamiento");
                     String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchToSend.toString());
                     System.out.println("Respuesta del servidor de archivos nodo 1: " + resFileServer);
@@ -205,4 +212,12 @@ public class FilesEndpoint {
         return response;
     }
 
+    private boolean _isValidURL(String url) {
+        try {
+            new URL(url).toURI();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
