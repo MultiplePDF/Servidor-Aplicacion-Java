@@ -1,6 +1,7 @@
 package com.example.SOAPwebservice;
 
 // Spring
+
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+
 import org.json.JSONException;
 
 // Java Net
@@ -25,6 +27,7 @@ import java.rmi.Naming;
 
 // Java Utils
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -113,46 +116,31 @@ public class FilesEndpoint {
                     System.out.println("\nDividiendo cargas para cada nodo:");
                     List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch, availableNodes.size());
 
-                    SubBatch batch1 = subBatches.get(0);
-                    SubBatch batch2 = subBatches.get(1);
-                    SubBatch batch3 = subBatches.get(2);
-                    System.out.println("Nodo 1: " + batch1.files.length + " archivos");
-                    System.out.println("Nodo 2: " + batch2.files.length + " archivos");
-                    System.out.println("Nodo 3: " + batch3.files.length + " archivos");
-
                     List<SubBatch> convertedSubBatches = new ArrayList<>();
                     for (int i = 0; i < availableNodes.size(); ++i) {
                         InterfaceRMI availableNode = availableNodes.get(i);
+                        SubBatch batchi = subBatches.get(i);
+                        System.out.println("Nodo " + (i + 1) + ":" + batchi.files.length + " archivos");
+
                         SubBatch convertedSubBatch;
-
-                        if (type.equals("URL"))
-                            convertedSubBatch = availableNode.conversionURL(subBatches.get(i));
-                        else
-                            convertedSubBatch = availableNode.conversionOffice(subBatches.get(i));
-
+                        if (type.equals("URL")) {
+                            System.out.println("Conversion de URL");
+                            convertedSubBatch = availableNode.conversionURL(batchi);
+                        } else {
+                            System.out.println("Conversion de Office");
+                            convertedSubBatch = availableNode.conversionOffice(batchi);
+                        }
                         convertedSubBatches.add(convertedSubBatch);
                     }
+                    System.out.println("Terminado");
 
-                    for (int i = 0; i < convertedSubBatches.size(); ++i)
-                        System.out.println("ID batch convertido a PDF " + i + ": " + convertedSubBatches.get(i).subBatchID);
-
-
-                    File[] files1 = convertedSubBatches.get(0).files;
-                    File[] files2 = convertedSubBatches.get(1).files;
-                    File[] files3 = convertedSubBatches.get(2).files;
-
-                    File[] allFiles = new File[files1.length + files2.length + files3.length];
-                    int index = 0;
-                    for (int i = 0; i < files1.length; i++) {
-                        allFiles[index++] = files1[i];
+                    List<File> convertedFiles = new ArrayList<>();
+                    for (int i = 0; i < convertedSubBatches.size(); ++i) {
+                        SubBatch subBatchi = convertedSubBatches.get(i);
+                        System.out.println("ID batch convertido a PDF " + i + ": " + subBatchi.subBatchID);
+                        convertedFiles.addAll(Arrays.asList(subBatchi.files));
                     }
-                    for (int i = 0; i < files2.length; i++) {
-                        allFiles[index++] = files2[i];
-                    }
-                    for (int i = 0; i < files3.length; i++) {
-                        allFiles[index++] = files3[i];
-                    }
-
+                    File[] allFiles = convertedFiles.toArray(new File[0]);
                     SubBatch batchToSend = new SubBatch(idSubBatch, userID, allFiles);
                     System.out.println("\nUnificado los " + convertedSubBatches.size() + " batches en 1 solo batch de: " + batchToSend.files.length + "archivos");
                     System.out.println("\nConexión al servidor de archivos para almacenamiento");
