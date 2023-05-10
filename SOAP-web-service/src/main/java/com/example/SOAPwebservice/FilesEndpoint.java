@@ -101,13 +101,14 @@ public class FilesEndpoint {
 
                     if (availableNodes.size() == 0) {
                         response.setResponse("No se ha encontrado ningun nodo disponible.");
+                        System.out.println("No se ha encontrado ningun nodo disponible.");
+                        System.out.println("\n----------------FIN--------------------");
                         return response;
                     }
+                    System.out.println("Conexión exitosa!");
 
                     System.out.println("\nDividiendo cargas para cada nodo:");
                     List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch, availableNodes.size());
-
-                    System.out.println("Conexión exitosa!");
 
                     List<SubBatch> convertedSubBatches = new ArrayList<>();
                     for (int i = 0; i < availableNodes.size(); ++i) {
@@ -215,8 +216,10 @@ public class FilesEndpoint {
     private boolean _isValidURL(String url) {
         try {
             new URL(url).toURI();
+            System.out.println("URL válido");
             return true;
         } catch (Exception e) {
+            System.out.println("URL inválido");
             return false;
         }
     }
