@@ -90,14 +90,17 @@ public class FilesEndpoint {
 
                 List<InterfaceRMI> availableNodes = new ArrayList<>();
                 try {
-                    if (_isValidURL("rmi://nodo1.bucaramanga.upb.edu.co:1099/convertidor"))
-                        availableNodes.add((InterfaceRMI) Naming.lookup("rmi://nodo1.bucaramanga.upb.edu.co:1099/convertidor"));
+                    InterfaceRMI nodo1 = _isValidURL("rmi://nodo1.bucaramanga.upb.edu.co:1099/convertidor");
+                    if (nodo1 != null)
+                        availableNodes.add(nodo1);
 
-                    if (_isValidURL("rmi://nodo2.bucaramanga.upb.edu.co:1099/convertidor"))
-                        availableNodes.add((InterfaceRMI) Naming.lookup("rmi://nodo2.bucaramanga.upb.edu.co:1099/convertidor"));
+                    InterfaceRMI nodo2 = _isValidURL("rmi://nodo2.bucaramanga.upb.edu.co:1099/convertidor");
+                    if (nodo2 != null)
+                        availableNodes.add(nodo2);
 
-                    if (_isValidURL("rmi://nodo3.bucaramanga.upb.edu.co:1099/convertidor"))
-                        availableNodes.add((InterfaceRMI) Naming.lookup("rmi://nodo3.bucaramanga.upb.edu.co:1099/convertidor"));
+                    InterfaceRMI nodo3 = _isValidURL("rmi://nodo3.bucaramanga.upb.edu.co:1099/convertidor");
+                    if (nodo3 != null)
+                        availableNodes.add(nodo3);
 
                     if (availableNodes.size() == 0) {
                         response.setResponse("No se ha encontrado ningun nodo disponible.");
@@ -146,7 +149,7 @@ public class FilesEndpoint {
                         System.out.println("\n----------------Metodo finalizado correctamente--------------------");
                     }
 
-                } catch (NotBoundException | RemoteException | MalformedURLException e) {
+                } catch (RemoteException | MalformedURLException e) {
                     System.out.println("Conexión RMI fallida: " + e);
                 }
             } else if (jsonResUser.has("error")) {
@@ -213,14 +216,14 @@ public class FilesEndpoint {
         return response;
     }
 
-    private boolean _isValidURL(String url) {
+    private InterfaceRMI _isValidURL(String url) {
         try {
-            new URL(url).toURI();
-            System.out.println("URL válido");
-            return true;
+            InterfaceRMI n = (InterfaceRMI) Naming.lookup(url);
+            System.out.println("Nodo válido");
+            return n;
         } catch (Exception e) {
-            System.out.println("URL inválido");
-            return false;
+            System.out.println("Nodo inválido");
+            return null;
         }
     }
 }
