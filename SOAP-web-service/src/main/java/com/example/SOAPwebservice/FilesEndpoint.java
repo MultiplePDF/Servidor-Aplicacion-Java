@@ -113,6 +113,13 @@ public class FilesEndpoint {
                     System.out.println("\nDividiendo cargas para cada nodo:");
                     List<SubBatch> subBatches = Balancer.divideSubBatch(fullBatch, availableNodes.size());
 
+                    SubBatch batch1 = subBatches.get(0);
+                    SubBatch batch2 = subBatches.get(1);
+                    SubBatch batch3 = subBatches.get(2);
+                    System.out.println("Nodo 1: " + batch1.files.length + " archivos");
+                    System.out.println("Nodo 2: " + batch2.files.length + " archivos");
+                    System.out.println("Nodo 3: " + batch3.files.length + " archivos");
+
                     List<SubBatch> convertedSubBatches = new ArrayList<>();
                     for (int i = 0; i < availableNodes.size(); ++i) {
                         InterfaceRMI availableNode = availableNodes.get(i);
@@ -129,14 +136,24 @@ public class FilesEndpoint {
                     for (int i = 0; i < convertedSubBatches.size(); ++i)
                         System.out.println("ID batch convertido a PDF " + i + ": " + convertedSubBatches.get(i).subBatchID);
 
-                    List<File> convertedFiles = new ArrayList<>();
-                    for (SubBatch convertedSubBatch : convertedSubBatches) {
-                        File[] convertedSubBatchFiles = convertedSubBatch.files;
-                        for (File convertedSubBatchFile : convertedSubBatchFiles)
-                            convertedFiles.add(convertedSubBatchFile);
+
+                    File[] files1 = convertedSubBatches.get(0).files;
+                    File[] files2 = convertedSubBatches.get(1).files;
+                    File[] files3 = convertedSubBatches.get(2).files;
+
+                    File[] allFiles = new File[files1.length + files2.length + files3.length];
+                    int index = 0;
+                    for (int i = 0; i < files1.length; i++) {
+                        allFiles[index++] = files1[i];
+                    }
+                    for (int i = 0; i < files2.length; i++) {
+                        allFiles[index++] = files2[i];
+                    }
+                    for (int i = 0; i < files3.length; i++) {
+                        allFiles[index++] = files3[i];
                     }
 
-                    SubBatch batchToSend = new SubBatch(idSubBatch, userID, (File[]) convertedFiles.toArray());
+                    SubBatch batchToSend = new SubBatch(idSubBatch, userID, allFiles);
                     System.out.println("\nUnificado los " + convertedSubBatches.size() + " batches en 1 solo batch de: " + batchToSend.files.length + "archivos");
                     System.out.println("\nConexión al servidor de archivos para almacenamiento");
                     String resFileServer = Rest.connect("http://bd.bucaramanga.upb.edu.co:4000/decode", "POST", batchToSend.toString());
